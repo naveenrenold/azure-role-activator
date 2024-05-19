@@ -13,7 +13,7 @@
         "port": 9222,
         "request": "attach",
         "type": "chrome",
-        "webRoot": "${workspaceFolder}"
+        "webRoot": "${workspaceFolder}/build/"
       },
       {
         "name": "Main",
@@ -24,7 +24,7 @@
         "windows": {
           "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
         },
-        "args": [".", "--remote-debugging-port=9222"],
+        "args": ["build/main.js", "--remote-debugging-port=9222"],
         "outputCapture": "std",
         "console": "integratedTerminal"
       }

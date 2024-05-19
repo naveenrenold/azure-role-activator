@@ -8,6 +8,7 @@ import { app, BrowserWindow, protocol, net } from "electron";
 import { PublicClientApplication } from "@azure/msal-node";
 import url from "node:url";
 import path from "node:path";
+import { Client } from "@microsoft/microsoft-graph-client";
 
 const MSAL_CONFIG: Configuration = {
   auth: {
@@ -77,6 +78,18 @@ async  function listenForAuthCode(navigateUrl:string , authWindow: BrowserWindow
     })
 }
 
+const getGraphClient = (accessToken : string) =>{
+const graphClient = Client.init({
+    authProvider : (done) =>{
+        done(null,accessToken)
+    },
+
+});
+return graphClient;
+};
+module.exports = getGraphClient;
+
+
 const createWindow = async() => {
   const win = new BrowserWindow({
     width: 800,
@@ -85,6 +98,8 @@ const createWindow = async() => {
   win.loadFile("../index.html");
   const authResult = await getTokenInteractive(win,scopes);
   console.log(authResult.accessToken);
+  const graphClient = getGraphClient(authResult.accessToken);
+  win.loadFile("../index.html");
 };
 app.whenReady().then(() => {
   createWindow();  

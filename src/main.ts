@@ -18,7 +18,7 @@ const MSAL_CONFIG: Configuration = {
 };
 const scopes= "User.Read";
 const pca = new PublicClientApplication(MSAL_CONFIG);
-const redirectUri = "msal://redirect";
+const redirectUri = "http://localhost";
 const cryptoProvider = new CryptoProvider();
 const pkceCodes = {
   challengeMethod: "S256",
@@ -43,13 +43,13 @@ async function getTokenInteractive(authWindow :BrowserWindow, tokenRequest : any
   };
 
   const authCodeUrl = await pca.getAuthCodeUrl(authCodeUrlParams);
-  protocol.handle(
-    redirectUri.split(":")[0],
-    (req: Request): Promise<Response> => {
-      const requestUrl = url.parse(req.url, true);
-      return net.fetch(path.normalize(`${__dirname}/${requestUrl.path}`));
-    }
-  );
+//   protocol.handle(
+//     redirectUri.split(":")[0],
+//     (req: Request): Promise<Response> => {
+//       const requestUrl = url.parse(req.url, true);
+//       return net.fetch(path.normalize(`${__dirname}/${requestUrl.path}`));
+//     }
+//   );
 
   const authCode =await listenForAuthCode(authCodeUrl, authWindow);
 

@@ -3,10 +3,10 @@
     "target": "es2016",                                
     "module": "commonjs",                              
      //"sourceMap": true,                              
-     //"outDir": "./build",
+     "outDir": "./build",
      "esModuleInterop": true,
      "forceConsistentCasingInFileNames": true,
      "skipLibCheck": true,
      "strict": true    
-  }
+}
 }

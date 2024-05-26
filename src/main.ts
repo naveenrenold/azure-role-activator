@@ -99,7 +99,7 @@ const createWindow = async() => {
   }
   }
   );
-  win.loadFile("http://localhost:3000");  
+  win.loadURL("http://localhost:3000");  
 };
 app.whenReady().then(() => {
   createWindow();  
@@ -119,7 +119,7 @@ app.on("window-all-closed", () => {
 
 async function started(win : BrowserWindow){
   const authResult = await getTokenInteractive(win,scopes);
-  win.loadFile("http://localhost:3000");  
+  win.loadURL("http://localhost:3000");  
   const graphClient = getGraphClient(authResult.accessToken);  
   console.log(authResult.accessToken)
   const user = await graphClient.api('/me').get();  

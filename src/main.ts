@@ -31,14 +31,14 @@ interface scopesType{
     scopes: string[]
 }
 
-async function getTokenInteractive(authWindow :BrowserWindow, tokenRequest : any) : Promise<AuthenticationResult> {
+async function getTokenInteractive(authWindow :BrowserWindow, tokenRequest : string[]) : Promise<AuthenticationResult> {
   const { verifier, challenge } = await cryptoProvider.generatePkceCodes();
   pkceCodes.verifier = verifier;
   pkceCodes.challenge = challenge;
 
   const authCodeUrlParams: AuthorizationUrlRequest = {
     redirectUri: redirectUri,
-    scopes: tokenRequest.scopes,
+    scopes: tokenRequest,
     codeChallenge: pkceCodes.challenge,
     codeChallengeMethod: pkceCodes.challengeMethod,
   };
@@ -55,7 +55,7 @@ async function getTokenInteractive(authWindow :BrowserWindow, tokenRequest : any
 
   const authResponse =await pca.acquireTokenByCode({
     redirectUri: redirectUri,
-    scopes: tokenRequest.scopes,
+    scopes: tokenRequest,
     code: authCode ?? "",
     codeVerifier: pkceCodes.verifier
 });
@@ -100,9 +100,12 @@ const createWindow = async() => {
   );
   win.loadFile("../index.html");  
   const authResult = await getTokenInteractive(win,scopes);
-  console.log(authResult.accessToken);
-  win.loadFile("../index.html");  
+  win.loadFile("../index.html");    
   const graphClient = getGraphClient(authResult.accessToken);  
+  console.log(authResult.accessToken)
+  const user = await graphClient.api('/me').get();
+  console.log(user)
+  console.log('done')
 };
 app.whenReady().then(() => {
   createWindow();  

@@ -10,6 +10,7 @@ import { Client } from "@microsoft/microsoft-graph-client";
 import url from 'node:url';
 import path from 'node:path';
 
+
 const MSAL_CONFIG: Configuration = {
   auth: {
     clientId: "5ad548fe-569a-465f-a98f-188af25d9b47",
@@ -98,14 +99,7 @@ const createWindow = async() => {
   }
   }
   );
-  win.loadFile("../index.html");  
-  const authResult = await getTokenInteractive(win,scopes);
-  win.loadFile("../index.html");    
-  const graphClient = getGraphClient(authResult.accessToken);  
-  console.log(authResult.accessToken)
-  const user = await graphClient.api('/me').get();
-  console.log(user)
-  console.log('done')
+  win.loadFile("http://localhost:3000");  
 };
 app.whenReady().then(() => {
   createWindow();  
@@ -122,3 +116,13 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+async function started(win : BrowserWindow){
+  const authResult = await getTokenInteractive(win,scopes);
+  win.loadFile("http://localhost:3000");  
+  const graphClient = getGraphClient(authResult.accessToken);  
+  console.log(authResult.accessToken)
+  const user = await graphClient.api('/me').get();  
+  console.log(user)
+  console.log('done')
+}

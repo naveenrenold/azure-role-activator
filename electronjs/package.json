@@ -4,7 +4,9 @@
   "description": "Used to activate your assigned Priviledged Role Management roles and add your ip address to azure keyvault and storage accounts",
   "main": "main.js",
   "scripts": {
-    "start": "tsc && electron build/main.js",
+    "prestart": "tsc",
+    "start": "conc -k \"npm run dev  --prefix ..\\react-ui\"  \"wait-on http://localhost:3000 && electron build/main.js\" ",
+    "start2": "tsc && electron build/main.js & npm run dev --prefix ..\\react-ui",
     "electron-run": "electron build/main.js",
     "eslint": "tsc && npx eslint build/main.js"
   },
@@ -39,6 +41,8 @@
   "dependencies": {
     "@azure/msal-node": "^2.8.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
-    "typescript": "^5.4.5"
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5",
+    "wait-on": "^7.2.0"
   }
 }

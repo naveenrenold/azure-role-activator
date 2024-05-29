@@ -1,24 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>
+      Enter your app/clientId:<input type='text' title='clientId' placeholder='Enter you clientId'></input>
+      Enter your tenantId:<input type='text' title='tenantId' placeholder='Enter you tenantId'></input>
+      <button type='submit'>Get roles</button>
+      </div>
     </div>
   );
 }

@@ -1,17 +1,40 @@
-{ 
+{
   "name": "azure-role-activater",
   "version": "1.0.0",
   "description": "Used to activate your assigned Priviledged Role Management roles and add your ip address to azure keyvault and storage accounts",
   "main": "main.js",
+  "build": {
+    "appId": "com.electron.roleactivator",
+    "productName": "Azure Role Activater",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "public"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "deb"
+    }
+  },
   "scripts": {
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prestart": "tsc -p tsconfig-build.json",
-    "start": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron build/electron.js\" ",    
+    "start": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
     "electron-run": "electron build\\electron.js",
-    "react-run": "npm run dev  --prefix ..\\react-ui"    
+    "react-run": "npm run dev  --prefix ..\\react-ui",
+    "electron:package:mac": "npm run build && electron-builder -m -c.extraMetadata.main=public/electron.js",
+    "electron:package:win": "npm run build && electron-builder -w -c.extraMetadata.main=public/electron.js",
+    "electron:package:linux": "npm build && electron-builder -l -c.extraMetadata.main=public/electron.js"
   },
   "repository": {
     "type": "git",
@@ -31,43 +54,45 @@
   "bugs": {
     "url": "https://github.com/naveenrenold/azure-role-activator/issues"
   },
-  "homepage": "https://github.com/naveenrenold/azure-role-activator#readme",
+  "homepage": "./",
   "devDependencies": {
     "@eslint/compat": "^1.0.1",
-    "@eslint/js": "^9.3.0",    
-    "electron": "^30.0.4",
-    "eslint-plugin-react": "^7.34.1",
-    "globals": "^15.2.0",
-    "typescript-eslint": "^7.9.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.3",
+    "@eslint/js": "^9.3.0",
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "electron": "^30.0.4",
+    "electron-builder": "^24.13.3",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "eslint-plugin-react": "^7.34.1",
+    "globals": "^15.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "typescript-eslint": "^7.9.0"
   },
   "dependencies": {
     "@azure/msal-node": "^2.8.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "concurrently": "^8.2.2",
-    "electron-builder": "^24.13.3",
-    "wait-on": "^7.2.0"   
+    "wait-on": "^7.2.0"
   },
   "eslintConfig": {
     "extends": [
-      "react-app"      
+      "react-app"
     ]
   },
   "browserslist": {
     "production": [
+      "last 1 electron version",
       ">0.2%",
       "not dead",
       "not op_mini all"
     ],
     "development": [
+      "last 1 electron version",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"

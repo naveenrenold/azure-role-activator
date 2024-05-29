@@ -1,14 +1,17 @@
-{
+{ 
   "name": "azure-role-activater",
   "version": "1.0.0",
   "description": "Used to activate your assigned Priviledged Role Management roles and add your ip address to azure keyvault and storage accounts",
   "main": "main.js",
   "scripts": {
-    "prestart": "tsc",
-    "start": "conc -k \"npm run dev  --prefix ..\\react-ui\"  \"wait-on http://localhost:3000 && electron build/main.js\" ",
-    "start2": "tsc && electron build/main.js & npm run dev --prefix ..\\react-ui",
-    "electron-run": "electron build/main.js",
-    "eslint": "tsc && npx eslint build/main.js"
+    "dev": "next dev",
+    "build": "next build",
+    "nextstart": "next start",
+    "lint": "next lint",
+    "prestart": "tsc -p tsconfig-build.json",
+    "start": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron build/electron.js\" ",    
+    "electron-run": "electron build\\electron.js",
+    "react-run": "npm run dev  --prefix ..\\react-ui"    
   },
   "repository": {
     "type": "git",
@@ -36,13 +39,22 @@
     "electron": "^30.0.4",
     "eslint-plugin-react": "^7.34.1",
     "globals": "^15.2.0",
-    "typescript-eslint": "^7.9.0"
+    "typescript-eslint": "^7.9.0",
+    "typescript": "^5",    
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3"
   },
   "dependencies": {
     "@azure/msal-node": "^2.8.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "concurrently": "^8.2.2",
+    "electron-builder": "^24.13.3",
     "typescript": "^5.4.5",
-    "wait-on": "^7.2.0"
+    "wait-on": "^7.2.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "next": "14.2.3"
   }
 }

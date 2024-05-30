@@ -99,7 +99,13 @@ const createWindow = async() => {
   }
   }
   );
-  win.loadURL("http://localhost:3000");  
+  win.loadURL(app.isPackaged
+    ? url.format({
+        pathname: path.join(__dirname, "index.html"),
+        protocol: "file:",
+        slashes: true,
+      })
+    : "http://localhost:3000");  
 };
 app.whenReady().then(() => {
   createWindow();  
@@ -119,7 +125,13 @@ app.on("window-all-closed", () => {
 
 async function started(win : BrowserWindow){
   const authResult = await getTokenInteractive(win,scopes);
-  win.loadURL("http://localhost:3000");  
+  win.loadURL(app.isPackaged
+    ? url.format({
+        pathname: path.join(__dirname, "index.html"),
+        protocol: "file:",
+        slashes: true,
+      })
+    : "http://localhost:3000");  
   const graphClient = getGraphClient(authResult.accessToken);  
   console.log(authResult.accessToken)
   const user = await graphClient.api('/me').get();  

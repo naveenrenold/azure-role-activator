@@ -93,7 +93,13 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
             webSecurity: false
         }
     });
-    win.loadURL("http://localhost:3000");
+    win.loadURL(electron_1.app.isPackaged
+        ? node_url_1.default.format({
+            pathname: node_path_1.default.join(__dirname, "index.html"),
+            protocol: "file:",
+            slashes: true,
+        })
+        : "http://localhost:3000");
 });
 electron_1.app.whenReady().then(() => {
     createWindow();
@@ -111,7 +117,13 @@ electron_1.app.on("window-all-closed", () => {
 function started(win) {
     return __awaiter(this, void 0, void 0, function* () {
         const authResult = yield getTokenInteractive(win, scopes);
-        win.loadURL("http://localhost:3000");
+        win.loadURL(electron_1.app.isPackaged
+            ? node_url_1.default.format({
+                pathname: node_path_1.default.join(__dirname, "index.html"),
+                protocol: "file:",
+                slashes: true,
+            })
+            : "http://localhost:3000");
         const graphClient = getGraphClient(authResult.accessToken);
         console.log(authResult.accessToken);
         const user = yield graphClient.api('/me').get();

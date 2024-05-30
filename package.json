@@ -9,15 +9,15 @@
     "productName": "Azure Role Activater",
     "extends": null,
     "files": [
-      "build/**/*",      
+      "build/**/*",
       "node_modules/**/*",
       "build/electron.js"
     ],
     "directories": {
       "buildResources": "public"
     },
-    "extraMetadata":{
-      "main":"build/electron.js"
+    "extraMetadata": {
+      "main": "build/electron.js"
     },
     "mac": {
       "target": "dmg"
@@ -35,12 +35,12 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prestart": "tsc -p tsconfig-build.json",
-    "start": "conc -k \"yarn dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
+    "start": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
     "electron-run": "electron build\\electron.js",
-    "react-run": "yarn dev  --prefix ..\\react-ui",
-    "electron:package:mac": "yarn build && electron-builder -m",
-    "electron:package:win": "yarn build && electron-builder -w",
-    "electron:package:linux": "yarn build && electron-builder -l"
+    "react-run": "npm run dev  --prefix ..\\react-ui",
+    "electron:package:mac": "npm run build && electron-builder -m",
+    "electron:package:win": "npm run build && electron-builder -w",
+    "electron:package:linux": "npm run build && electron-builder -l"
   },
   "repository": {
     "type": "git",
@@ -72,6 +72,7 @@
     "@types/node": "^16.18.97",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "concurrency": "^0.1.4",
     "electron": "^30.0.4",
     "electron-builder": "^24.13.3",
     "eslint": "^8",
@@ -82,7 +83,8 @@
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "typescript-eslint": "^7.9.0"
+    "typescript-eslint": "^7.9.0",
+    "yarn": "^1.22.22"
   },
   "eslintConfig": {
     "extends": [

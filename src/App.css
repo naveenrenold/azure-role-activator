@@ -1,0 +1,25 @@
+.mainDiv{
+    font-family:flex;
+    font-size: 16px;
+}
+.flexbox-row-center{
+    display:flex;
+    justify-content: center;    
+}
+.flexbox-item-default-margins-text{
+    display:flex;
+    margin:2px 5px 5px 5px;
+    padding:'1px 1px 1px 1px';
+}
+.flexbox-item-default-margins-textbox{
+    display:flex;
+    margin:2px 5px 5px 5px;
+    padding:'4px 4px 4px 4px';
+}
+.flexbutton{
+    display:flex;
+    margin:2px 5px 5px 5px;
+    padding:7px 7px 7px 7px;
+    background-color :orange;
+    color : darkslategray;
+}

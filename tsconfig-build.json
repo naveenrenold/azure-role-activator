@@ -11,6 +11,7 @@
        "jsx": "react-jsx",   
   },
   "include": [
-    "electron.ts"
+    "electron.ts",
+    "preload.ts"
   ]
   }

@@ -1,5 +1,5 @@
-1. Package the thing-done
-2. check how ui and elctron communicate
-2. Then make the ui -
-3. Write all ui code in react
-4. Then try with appid from bprt?
+1. back to business
+2.check what is wrong lets go step by step ok 
+3.Hmm since i moved node packages to browser it is failing it should solve if i move from app.tsx to electron.ts localhost
+4.For now comment everything and try IPC 
+5.What does protocol.handle do??

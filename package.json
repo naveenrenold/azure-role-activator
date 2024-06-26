@@ -36,7 +36,7 @@
     "eject": "react-scripts eject",
     "prestart": "tsc -p tsconfig-build.json",
     "start": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
-    "electron-run": "electron build\\electron.js",
+    "electron-run": "electron public\\electron.js",
     "react-run": "npm run dev  --prefix ..\\react-ui",
     "electron:package:mac": "npm run build && electron-builder -m",
     "electron:package:win": "npm run build && electron-builder -w",
@@ -64,6 +64,8 @@
     "@azure/msal-node": "^2.8.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "concurrently": "^8.2.2",
+    "crypto-browserify": "^3.12.0",
+    "util": "^0.12.5",
     "wait-on": "^7.2.0"
   },
   "devDependencies": {
@@ -98,5 +100,9 @@
     "development": [
       "last 1 electron version"
     ]
+  },
+  "browser": {
+    "crypto": true,
+    "stream": true
   }
 }

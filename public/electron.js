@@ -16,10 +16,13 @@ const electron_1 = require("electron");
 const node_url_1 = __importDefault(require("node:url"));
 const node_path_1 = __importDefault(require("node:path"));
 var win;
-electron_1.protocol.handle('http', (req) => {
-    const requestUrl = node_url_1.default.parse(req.url, true);
-    return electron_1.net.fetch(node_path_1.default.normalize(`${__dirname}/${requestUrl.path}`));
-});
+// protocol.handle(
+//   'http',
+//   (req: Request): Promise<Response> => {
+//     const requestUrl = url.parse(req.url, true);
+//     return net.fetch(path.normalize(`${__dirname}/${requestUrl.path}`));
+//   }
+// );
 function listenForAuthCode(events, navigateUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         win.loadURL(navigateUrl);

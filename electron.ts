@@ -1,5 +1,5 @@
 
-import { app, BrowserWindow, ipcMain, net, protocol} from "electron";
+import { app, BrowserWindow, ipcMain} from "electron";
 import url from 'node:url';
 import path from 'node:path';
 

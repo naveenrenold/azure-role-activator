@@ -16,6 +16,36 @@ const electron_1 = require("electron");
 const node_url_1 = __importDefault(require("node:url"));
 const node_path_1 = __importDefault(require("node:path"));
 var win;
+//App start
+electron_1.app.whenReady().then(() => {
+    // createWindow();  
+    electron_1.app.on("activate", () => {
+        if (electron_1.BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
+});
+//Create window
+const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
+    win = new electron_1.BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            webSecurity: false,
+            preload: node_path_1.default.join(__dirname, 'preload.js')
+        }
+    });
+    //Load home page from localhost or dist
+    win.loadURL(electron_1.app.isPackaged
+        ? node_url_1.default.format({
+            pathname: node_path_1.default.join(__dirname, "index.html"),
+            protocol: "file:",
+            slashes: true,
+        })
+        : "http://localhost:3000");
+    electron_1.ipcMain.handle('authCodeFlow', listenForAuthCode);
+});
+// why used ??
 // protocol.handle(
 //   'http',
 //   (req: Request): Promise<Response> => {
@@ -40,31 +70,7 @@ function listenForAuthCode(events, navigateUrl) {
         });
     });
 }
-const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
-    win = new electron_1.BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            webSecurity: false
-        }
-    });
-    win.loadURL(electron_1.app.isPackaged
-        ? node_url_1.default.format({
-            pathname: node_path_1.default.join(__dirname, "index.html"),
-            protocol: "file:",
-            slashes: true,
-        })
-        : "http://localhost:3000");
-    electron_1.ipcMain.handle('authCodeFlow', listenForAuthCode);
-});
-electron_1.app.whenReady().then(() => {
-    createWindow();
-    electron_1.app.on("activate", () => {
-        if (electron_1.BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
-});
+//App closed
 electron_1.app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         electron_1.app.quit();

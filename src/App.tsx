@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import './App.css';
-import {
-  AuthenticationResult,
-  AuthorizationUrlRequest,
-  Configuration,
-  CryptoProvider,
-} from "@azure/msal-node";
-import { PublicClientApplication } from "@azure/msal-node";
-import { Client } from "@microsoft/microsoft-graph-client";
-import {IpcRenderer} from "electron";
-import { app } from 'electron/main';
-import { shell } from 'electron/common';
-import EventEmitter from 'events';
+// import {
+//   // AuthenticationResult,
+//   // AuthorizationUrlRequest,
+//   Configuration,
+//   CryptoProvider,
+// } from "@azure/msal-node";
+
+// import { Client } from "@microsoft/microsoft-graph-client";
+// import {IpcRenderer} from "electron";
+// import { app } from 'electron/main';
+// import { shell } from 'electron/common';
+// import EventEmitter from 'events';
 
 
 function App() {
@@ -29,21 +29,21 @@ function App() {
   //window.get roles
   var window =new Window();
   // constants for testing
-  const MSAL_CONFIG: Configuration = {
-    auth: {
-      clientId: "5ad548fe-569a-465f-a98f-188af25d9b47",
-      authority: "https://login.microsoftonline.com/b6281daa-0870-4760-9be1-f6b0cd37bfa7"
-    }
-  };
-  const scopes= ["User.Read"];
-  const pca = new PublicClientApplication(MSAL_CONFIG);
-  const redirectUri = "http://localhost";
-  const cryptoProvider = new CryptoProvider();
-  const pkceCodes = {
-    challengeMethod: "S256",
-    verifier: "",
-    challenge: "",
-  };
+  // const MSAL_CONFIG: Configuration = {
+  //   auth: {
+  //     clientId: "5ad548fe-569a-465f-a98f-188af25d9b47",
+  //     authority: "https://login.microsoftonline.com/b6281daa-0870-4760-9be1-f6b0cd37bfa7"
+  //   }
+  // };
+  // const scopes= ["User.Read"];
+  // const pca = new PublicClientApplication(MSAL_CONFIG);
+  // const redirectUri = "http://localhost";
+  // const cryptoProvider = new CryptoProvider();
+  // const pkceCodes = {
+  //   challengeMethod: "S256",
+  //   verifier: "",
+  //   challenge: "",
+  // };
   // async function getTokenInteractive(tokenRequest : string[]) : Promise<AuthenticationResult> {
   //   console.log("before")
   //   const { verifier, challenge } = await cryptoProvider.generatePkceCodes();

@@ -1,5 +1,2 @@
-1. back to business
-2.check what is wrong lets go step by step ok 
-3.Hmm since i moved node packages to browser it is failing it should solve if i move from app.tsx to electron.ts localhost
-4.For now comment everything and try IPC 
-5.What does protocol.handle do??
+1. Need to either move azure-msal to electron js or use a different way of auth with react
+2.Since i wont use react-router on demand lets use electron approach

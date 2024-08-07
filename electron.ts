@@ -2,6 +2,7 @@
 import { app, BrowserWindow, ipcMain} from "electron";
 import url from 'node:url';
 import path from 'node:path';
+import { PublicClientApplication } from "@azure/msal-node";
 
 var win :BrowserWindow;
 

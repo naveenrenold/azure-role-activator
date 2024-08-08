@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  authCodeFlow: () => ipcRenderer.invoke('getAuthCode')  
+  getToken: (clientId : string, tenantId : string) => ipcRenderer.invoke('getToken', clientId, tenantId)  
 })

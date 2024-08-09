@@ -17,12 +17,12 @@ const node_url_1 = __importDefault(require("node:url"));
 const node_path_1 = __importDefault(require("node:path"));
 var win;
 //App start
+electron_1.ipcMain.handle('getToken', (event, args) => { getToken(args['clientId'], args['tenantId']); });
 electron_1.app.whenReady().then(() => {
     createWindow();
     electron_1.app.on("activate", () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0) {
             createWindow();
-            //ipcMain.handle('getToken', (event, args) => {getToken(args['clientId'], args['tenantId'])})      
         }
     });
 });
@@ -33,7 +33,7 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
         height: 600,
         webPreferences: {
             webSecurity: false,
-            preload: node_path_1.default.join(__dirname, './public/preload.js')
+            preload: node_path_1.default.join(__dirname, 'preload.js')
         }
     });
     //Load home page from localhost or dist

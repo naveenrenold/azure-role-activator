@@ -14,12 +14,14 @@ import { Client } from "@microsoft/microsoft-graph-client";
 var win :BrowserWindow;
 
 //App start
+
+ipcMain.handle('getToken', (event, args) => {getToken(args['clientId'], args['tenantId'])})      
+
 app.whenReady().then(() => {
    createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-      //ipcMain.handle('getToken', (event, args) => {getToken(args['clientId'], args['tenantId'])})      
+      createWindow();      
     }
   });
 });
@@ -31,7 +33,7 @@ const createWindow = async() => {
    height: 600,
    webPreferences: {
      webSecurity: false,
-     preload: path.join(__dirname, './public/preload.js')  
+     preload: path.join(__dirname, 'preload.js')  
  }
  }
  );

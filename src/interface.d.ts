@@ -1,9 +1,9 @@
 export interface IElectronAPI{
-    getToken : (clientId : string , tenantId : string) => void
+    getToken : (clientId : string , tenantId : string) => Promise<void>
 }
 
 declare global{
-    interface window{
+    interface Window{
         electronAPI : IElectronAPI
     }
-}
+}a

@@ -22,7 +22,7 @@ electron_1.app.whenReady().then(() => {
     electron_1.app.on("activate", () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0) {
             createWindow();
-            electron_1.ipcMain.handle('getToken', (event, args) => { getToken(args['clientId'], args['tenantId']); });
+            //ipcMain.handle('getToken', (event, args) => {getToken(args['clientId'], args['tenantId'])})      
         }
     });
 });
@@ -33,7 +33,7 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
         height: 600,
         webPreferences: {
             webSecurity: false,
-            preload: node_path_1.default.join(__dirname, 'preload.js')
+            preload: node_path_1.default.join(__dirname, './public/preload.js')
         }
     });
     //Load home page from localhost or dist
@@ -44,7 +44,8 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
             slashes: true,
         })
         : "http://localhost:3000");
-    electron_1.ipcMain.handle('authCodeFlow', listenForAuthCode);
+    console.log(node_path_1.default.join(__dirname, './public/preload.js'));
+    //ipcMain.handle('authCodeFlow',listenForAuthCode)
 });
 // why used ??
 // protocol.handle(

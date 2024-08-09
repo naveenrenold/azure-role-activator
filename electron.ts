@@ -19,7 +19,7 @@ app.whenReady().then(() => {
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-      ipcMain.handle('getToken', (event, args) => {getToken(args['clientId'], args['tenantId'])})      
+      //ipcMain.handle('getToken', (event, args) => {getToken(args['clientId'], args['tenantId'])})      
     }
   });
 });
@@ -31,7 +31,7 @@ const createWindow = async() => {
    height: 600,
    webPreferences: {
      webSecurity: false,
-     preload: path.join(__dirname, 'preload.js')
+     preload: path.join(__dirname, './public/preload.js')  
  }
  }
  );
@@ -43,8 +43,8 @@ const createWindow = async() => {
        slashes: true,
      })
    : "http://localhost:3000");  
-   
- ipcMain.handle('authCodeFlow',listenForAuthCode)
+   console.log(path.join(__dirname, './public/preload.js'))
+ //ipcMain.handle('authCodeFlow',listenForAuthCode)
 };
 
 // why used ??

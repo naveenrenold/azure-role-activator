@@ -15,7 +15,7 @@ var win :BrowserWindow;
 
 //App start
 app.whenReady().then(() => {
-  // createWindow();  
+   createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -42,8 +42,7 @@ const createWindow = async() => {
        protocol: "file:",
        slashes: true,
      })
-   : "http://localhost:3000");  
-   console.log(path.join(__dirname, './public/preload.js'))
+   : "http://localhost:3000");     
  //ipcMain.handle('authCodeFlow',listenForAuthCode)
 };
 
@@ -56,20 +55,20 @@ const createWindow = async() => {
 //   }
 // );
 
-async function listenForAuthCode(events:Electron.IpcMainInvokeEvent, navigateUrl:string) : Promise<string | null> {
-    win.loadURL(navigateUrl);
-    return new Promise((resolve,reject)=>{
-        win.webContents.on('will-redirect', (event, responseUrl) =>{
-            try{
-                const parsedUrl = new URL(responseUrl);
-                const authCode = parsedUrl.searchParams.get('code');
-                resolve(authCode);
-            }catch(err){
-                reject(err);
-            }
-        })
-    })
-}
+// async function listenForAuthCode(events:Electron.IpcMainInvokeEvent, navigateUrl:string) : Promise<string | null> {
+//     win.loadURL(navigateUrl);
+//     return new Promise((resolve,reject)=>{
+//         win.webContents.on('will-redirect', (event, responseUrl) =>{
+//             try{
+//                 const parsedUrl = new URL(responseUrl);
+//                 const authCode = parsedUrl.searchParams.get('code');
+//                 resolve(authCode);
+//             }catch(err){
+//                 reject(err);
+//             }
+//         })
+//     })
+// }
   // constants for testing
   const MSAL_CONFIG: Configuration = {
     auth: {
@@ -147,3 +146,4 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+

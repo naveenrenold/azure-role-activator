@@ -18,7 +18,7 @@ const node_path_1 = __importDefault(require("node:path"));
 var win;
 //App start
 electron_1.app.whenReady().then(() => {
-    // createWindow();  
+    createWindow();
     electron_1.app.on("activate", () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0) {
             createWindow();
@@ -44,7 +44,6 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
             slashes: true,
         })
         : "http://localhost:3000");
-    console.log(node_path_1.default.join(__dirname, './public/preload.js'));
     //ipcMain.handle('authCodeFlow',listenForAuthCode)
 });
 // why used ??
@@ -55,23 +54,20 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
 //     return net.fetch(path.normalize(`${__dirname}/${requestUrl.path}`));
 //   }
 // );
-function listenForAuthCode(events, navigateUrl) {
-    return __awaiter(this, void 0, void 0, function* () {
-        win.loadURL(navigateUrl);
-        return new Promise((resolve, reject) => {
-            win.webContents.on('will-redirect', (event, responseUrl) => {
-                try {
-                    const parsedUrl = new URL(responseUrl);
-                    const authCode = parsedUrl.searchParams.get('code');
-                    resolve(authCode);
-                }
-                catch (err) {
-                    reject(err);
-                }
-            });
-        });
-    });
-}
+// async function listenForAuthCode(events:Electron.IpcMainInvokeEvent, navigateUrl:string) : Promise<string | null> {
+//     win.loadURL(navigateUrl);
+//     return new Promise((resolve,reject)=>{
+//         win.webContents.on('will-redirect', (event, responseUrl) =>{
+//             try{
+//                 const parsedUrl = new URL(responseUrl);
+//                 const authCode = parsedUrl.searchParams.get('code');
+//                 resolve(authCode);
+//             }catch(err){
+//                 reject(err);
+//             }
+//         })
+//     })
+// }
 // constants for testing
 const MSAL_CONFIG = {
     auth: {

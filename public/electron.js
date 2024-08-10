@@ -17,8 +17,12 @@ const node_url_1 = __importDefault(require("node:url"));
 const node_path_1 = __importDefault(require("node:path"));
 var win;
 //App start
-electron_1.ipcMain.handle('getToken', (event, args) => { getToken(args['clientId'], args['tenantId']); });
+// interface responseObject{
+//   clientId :string,
+//   tenantId: string
+// }
 electron_1.app.whenReady().then(() => {
+    electron_1.ipcMain.handle("getToken", (event, clientId, tenantId) => { getToken(event, clientId, tenantId); });
     createWindow();
     electron_1.app.on("activate", () => {
         if (electron_1.BrowserWindow.getAllWindows().length === 0) {
@@ -75,8 +79,8 @@ const MSAL_CONFIG = {
         authority: "https://login.microsoftonline.com/b6281daa-0870-4760-9be1-f6b0cd37bfa7"
     }
 };
-function getToken(clientId, tenantId) {
-    console.log('lol ' + clientId + 'tid: ' + tenantId);
+function getToken(event, clientId, tenantId) {
+    console.log('sender:' + event.sender + ';args 1:' + clientId + ';args 2:' + tenantId);
 }
 // const scopes= ["User.Read"];
 // const pca = new PublicClientApplication(MSAL_CONFIG);

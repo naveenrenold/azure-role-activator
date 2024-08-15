@@ -11,7 +11,17 @@ import {
 } from "@azure/msal-node";
 import { Client } from "@microsoft/microsoft-graph-client";
 
+//variables declare
 var win :BrowserWindow;
+const scopes= ["User.Read"];
+const redirectUri = "http://localhost";
+const cryptoProvider = new CryptoProvider();
+const pkceCodes = {
+  challengeMethod: "S256",
+  verifier: "",
+  challenge: ""
+}
+
 
 //App start
 app.whenReady().then(() => {
@@ -45,29 +55,21 @@ const createWindow = async() => {
    : "http://localhost:3000");     
 };
 
-// why used ??
-// protocol.handle(
-//   'http',
-//   (req: Request): Promise<Response> => {
-//     const requestUrl = url.parse(req.url, true);
-//     return net.fetch(path.normalize(`${__dirname}/${requestUrl.path}`));
-//   }
-// );
 
-// async function listenForAuthCode(events:Electron.IpcMainInvokeEvent, navigateUrl:string) : Promise<string | null> {
-//     win.loadURL(navigateUrl);
-//     return new Promise((resolve,reject)=>{
-//         win.webContents.on('will-redirect', (event, responseUrl) =>{
-//             try{
-//                 const parsedUrl = new URL(responseUrl);
-//                 const authCode = parsedUrl.searchParams.get('code');
-//                 resolve(authCode);
-//             }catch(err){
-//                 reject(err);
-//             }
-//         })
-//     })
-// } 
+async function listenForAuthCode(events:Electron.IpcMainInvokeEvent, navigateUrl:string) : Promise<string | null> {
+    win.loadURL(navigateUrl);
+    return new Promise((resolve,reject)=>{
+        win.webContents.on('will-redirect', (event, responseUrl) =>{
+            try{
+                const parsedUrl = new URL(responseUrl);
+                const authCode = parsedUrl.searchParams.get('code');
+                resolve(authCode);
+            }catch(err){
+                reject(err);
+            }
+        })
+    })
+} 
 
   function getToken(event:IpcMainInvokeEvent, clientId : string, tenantId : string )
   {
@@ -79,45 +81,40 @@ const createWindow = async() => {
     //     authority: `https://login.microsoftonline.com/${tenantId}`
     //   }
     // };
-    const MSAL_CONFIG: Configuration = {
+    const MSAL_CONFIG : Configuration = {
       auth: {
         clientId: "5ad548fe-569a-465f-a98f-188af25d9b47",
         authority: "https://login.microsoftonline.com/b6281daa-0870-4760-9be1-f6b0cd37bfa7"
       }
-    };
-    const scopes= ["User.Read"];
-    const pca = new PublicClientApplication(MSAL_CONFIG);
-    const redirectUri = "http://localhost";
-    const cryptoProvider = new CryptoProvider();
-    const pkceCodes = {
-      challengeMethod: "S256",
-      verifier: "",
-      challenge: ""
-  }
-  async function getTokenInteractive(tokenRequest : string[]) : Promise<AuthenticationResult> {
-    console.log("before")
-    const { verifier, challenge } = await cryptoProvider.generatePkceCodes();
-    console.log("after")
-    pkceCodes.verifier = verifier;
-    pkceCodes.challenge = challenge;
-
-    const authCodeUrlParams: AuthorizationUrlRequest = {
-      redirectUri: redirectUri,
-      scopes: tokenRequest,
-      codeChallenge: pkceCodes.challenge,
-      codeChallengeMethod: pkceCodes.challengeMethod,
-    };
-    const authCodeUrl = await pca.getAuthCodeUrl(authCodeUrlParams);
-      
-    const authResponse =await pca.acquireTokenByCode({
-      redirectUri: redirectUri,
-      scopes: tokenRequest,
-      code: authCode ?? "",
-      codeVerifier: pkceCodes.verifier
-  });
-   return authResponse;
-  }
+    };    
+    const pca = new PublicClientApplication(MSAL_CONFIG);                    
 }
+
+async function getTokenInteractive(tokenRequest : string[], pca : PublicClientApplication) : Promise<AuthenticationResult> {
+  console.log("before")
+  const { verifier, challenge } = await cryptoProvider.generatePkceCodes();
+  console.log("after")
+  pkceCodes.verifier = verifier;
+  pkceCodes.challenge = challenge;
+
+  const authCodeUrlParams: AuthorizationUrlRequest = {
+    redirectUri: redirectUri,
+    scopes: tokenRequest,
+    codeChallenge: pkceCodes.challenge,
+    codeChallengeMethod: pkceCodes.challengeMethod,
+  };
+  const authCodeUrl = await pca.getAuthCodeUrl(authCodeUrlParams);
+    
+  const authResponse =await pca.acquireTokenByCode({
+    redirectUri: redirectUri,
+    scopes: tokenRequest,
+    code: authCode ?? "",
+    codeVerifier: pkceCodes.verifier
+});
+ return authResponse;
+}
+
+
 
 
     

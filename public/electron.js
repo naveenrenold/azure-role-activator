@@ -107,7 +107,7 @@ function getTokenInteractive(tokenRequest, pca) {
         const authResponse = yield pca.acquireTokenByCode({
             redirectUri: redirectUri,
             scopes: tokenRequest,
-            code: authCode !== null && authCode !== void 0 ? authCode : "",
+            code: "",
             codeVerifier: pkceCodes.verifier
         });
         return authResponse;

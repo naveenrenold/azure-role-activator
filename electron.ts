@@ -108,7 +108,7 @@ async function getTokenInteractive(tokenRequest : string[], pca : PublicClientAp
   const authResponse =await pca.acquireTokenByCode({
     redirectUri: redirectUri,
     scopes: tokenRequest,
-    code: authCode ?? "",
+    code: "",//authCode ?? "",
     codeVerifier: pkceCodes.verifier
 });
  return authResponse;

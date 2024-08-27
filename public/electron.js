@@ -15,12 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const node_url_1 = __importDefault(require("node:url"));
 const node_path_1 = __importDefault(require("node:path"));
+const msal_node_1 = require("@azure/msal-node");
+const msal_node_2 = require("@azure/msal-node");
+//variables declare
 var win;
+const scopes = ["User.Read"];
+const redirectUri = "http://localhost";
+const cryptoProvider = new msal_node_2.CryptoProvider();
+const pkceCodes = {
+    challengeMethod: "S256",
+    verifier: "",
+    challenge: ""
+};
 //App start
-// interface responseObject{
-//   clientId :string,
-//   tenantId: string
-// }
 electron_1.app.whenReady().then(() => {
     electron_1.ipcMain.handle("getToken", (event, clientId, tenantId) => { getToken(event, clientId, tenantId); });
     createWindow();
@@ -48,71 +55,64 @@ const createWindow = () => __awaiter(void 0, void 0, void 0, function* () {
             slashes: true,
         })
         : "http://localhost:3000");
-    //ipcMain.handle('authCodeFlow',listenForAuthCode)
 });
-// why used ??
-// protocol.handle(
-//   'http',
-//   (req: Request): Promise<Response> => {
-//     const requestUrl = url.parse(req.url, true);
-//     return net.fetch(path.normalize(`${__dirname}/${requestUrl.path}`));
-//   }
-// );
-// async function listenForAuthCode(events:Electron.IpcMainInvokeEvent, navigateUrl:string) : Promise<string | null> {
-//     win.loadURL(navigateUrl);
-//     return new Promise((resolve,reject)=>{
-//         win.webContents.on('will-redirect', (event, responseUrl) =>{
-//             try{
-//                 const parsedUrl = new URL(responseUrl);
-//                 const authCode = parsedUrl.searchParams.get('code');
-//                 resolve(authCode);
-//             }catch(err){
-//                 reject(err);
-//             }
-//         })
-//     })
-// }
-// constants for testing
-const MSAL_CONFIG = {
-    auth: {
-        clientId: "5ad548fe-569a-465f-a98f-188af25d9b47",
-        authority: "https://login.microsoftonline.com/b6281daa-0870-4760-9be1-f6b0cd37bfa7"
-    }
-};
-function getToken(event, clientId, tenantId) {
-    console.log('sender:' + event.sender + ';args 1:' + clientId + ';args 2:' + tenantId);
+function listenForAuthCode(events, navigateUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        win.loadURL(navigateUrl);
+        return new Promise((resolve, reject) => {
+            win.webContents.on('will-redirect', (event, responseUrl) => {
+                try {
+                    const parsedUrl = new URL(responseUrl);
+                    const authCode = parsedUrl.searchParams.get('code');
+                    resolve(authCode);
+                }
+                catch (err) {
+                    reject(err);
+                }
+            });
+        });
+    });
 }
-// const scopes= ["User.Read"];
-// const pca = new PublicClientApplication(MSAL_CONFIG);
-// const redirectUri = "http://localhost";
-// const cryptoProvider = new CryptoProvider();
-// const pkceCodes = {
-//   challengeMethod: "S256",
-//   verifier: "",
-//   challenge: "",
-// };
-// async function getTokenInteractive(tokenRequest : string[]) : Promise<AuthenticationResult> {
-//   console.log("before")
-//   const { verifier, challenge } = await cryptoProvider.generatePkceCodes();
-//   console.log("after")
-//   pkceCodes.verifier = verifier;
-//   pkceCodes.challenge = challenge;
-//   const authCodeUrlParams: AuthorizationUrlRequest = {
-//     redirectUri: redirectUri,
-//     scopes: tokenRequest,
-//     codeChallenge: pkceCodes.challenge,
-//     codeChallengeMethod: pkceCodes.challengeMethod,
-//   };
-//   const authCodeUrl = await pca.getAuthCodeUrl(authCodeUrlParams);
-//   const authCode =await window.api.getAuthCode(authCodeUrl);
-//   const authResponse =await pca.acquireTokenByCode({
-//     redirectUri: redirectUri,
-//     scopes: tokenRequest,
-//     code: authCode ?? "",
-//     codeVerifier: pkceCodes.verifier
-// });
-//  return authResponse;
-// }
+function getToken(event, clientId, tenantId) {
+    console.log('sender:' + event.processId + ';args 1:' + clientId + ';args 2:' + tenantId);
+    ////uncomment later
+    // const MSAL_CONFIG: Configuration = {
+    //   auth: {
+    //     clientId: clientId,
+    //     authority: `https://login.microsoftonline.com/${tenantId}`
+    //   }
+    // };
+    const MSAL_CONFIG = {
+        auth: {
+            clientId: "5ad548fe-569a-465f-a98f-188af25d9b47",
+            authority: "https://login.microsoftonline.com/b6281daa-0870-4760-9be1-f6b0cd37bfa7"
+        }
+    };
+    const pca = new msal_node_1.PublicClientApplication(MSAL_CONFIG);
+}
+function getTokenInteractive(tokenRequest, pca) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("before");
+        const { verifier, challenge } = yield cryptoProvider.generatePkceCodes();
+        console.log("after");
+        pkceCodes.verifier = verifier;
+        pkceCodes.challenge = challenge;
+        const authCodeUrlParams = {
+            redirectUri: redirectUri,
+            scopes: tokenRequest,
+            codeChallenge: pkceCodes.challenge,
+            codeChallengeMethod: pkceCodes.challengeMethod,
+        };
+        const authCodeUrl = yield pca.getAuthCodeUrl(authCodeUrlParams);
+        const authResponse = yield pca.acquireTokenByCode({
+            redirectUri: redirectUri,
+            scopes: tokenRequest,
+            code: authCode !== null && authCode !== void 0 ? authCode : "",
+            codeVerifier: pkceCodes.verifier
+        });
+        return authResponse;
+    });
+}
 // const getGraphClient = (accessToken : string) =>{
 // const graphClient = Client.init({
 //     authProvider : (done) =>{

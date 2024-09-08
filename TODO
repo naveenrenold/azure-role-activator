@@ -1,2 +1,5 @@
-1. Need to either move azure-msal to electron js or use a different way of auth with react
-2.Since i wont use react-router on demand lets use electron approach
+1. Electron auth works
+2. Make a graph api call to get data 
+3. Same page add a table in react
+4. It should fill in values from request
+5. Then should be able to make the call  

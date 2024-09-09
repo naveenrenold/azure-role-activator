@@ -12,7 +12,7 @@ import { Client } from "@microsoft/microsoft-graph-client";
 
 ////Constants declare
 var win : BrowserWindow;
-const scopes = ["RoleManagement.ReadWrite.Directory"];
+const scopes = ["RoleAssignmentSchedule.ReadWrite.Directory"];
 const redirectUri = "http://localhost:3000/";
 const cryptoProvider = new CryptoProvider();
 const pkceCodes = {
@@ -36,6 +36,7 @@ async function getTokenAsync(event : IpcMainInvokeEvent, clientId : string, tena
 
     const pca = new PublicClientApplication(MSAL_CONFIG);
     const authResponse = await getTokenInteractive(scopes, pca);
+    console.log(authResponse)
     await graphClient(authResponse.accessToken);
 }
   
@@ -100,7 +101,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 
 async function graphClient(accessToken:string){
   const graphClient = await getGraphClient(accessToken);      
-  const user = await graphClient.api('/roleManagement/directory/roleEligibilityScheduleRequests')
+  const user = await graphClient.api('/roleManagement/directory/roleAssignmentScheduleRequests')
   //.expand('roleDefinitionId')
 	//.select('principalId,action,roleDefinitionId')
   .get().then(a => {console.log(a)}).catch(a =>  {console.log(a)});

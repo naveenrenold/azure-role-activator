@@ -1,5 +1,8 @@
 1. Electron auth works
-2. Make a graph api call to get data 
+2. Make a graph api call to get data - how graph api works :(
 3. Same page add a table in react
 4. It should fill in values from request
 5. Then should be able to make the call  
+
+-----
+1. why graph api client not working :(

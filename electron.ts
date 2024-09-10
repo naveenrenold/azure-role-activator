@@ -8,11 +8,11 @@ import {
   Configuration,
   CryptoProvider,
 } from "@azure/msal-node";
-import { Client } from "@microsoft/microsoft-graph-client";
+import { AuthProvider, Client } from "@microsoft/microsoft-graph-client";
 
 ////Constants declare
 var win : BrowserWindow;
-const scopes = ["RoleAssignmentSchedule.ReadWrite.Directory"];
+const scopes = ["RoleManagement.ReadWrite.Directory"];
 const redirectUri = "http://localhost:3000/";
 const cryptoProvider = new CryptoProvider();
 const pkceCodes = {
@@ -20,6 +20,7 @@ const pkceCodes = {
   verifier: "",
   challenge: ""
 }
+let accessToken = '';
 
 ////////////////////////////////////////////////
 
@@ -37,7 +38,13 @@ async function getTokenAsync(event : IpcMainInvokeEvent, clientId : string, tena
     const pca = new PublicClientApplication(MSAL_CONFIG);
     const authResponse = await getTokenInteractive(scopes, pca);
     console.log(authResponse)
-    await graphClient(authResponse.accessToken);
+    accessToken = authResponse.accessToken;    
+    var client = await getGraphClient(authResponse.accessToken);
+    let roleAssignmentScheduleRequests = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests').select('roleDefinitionId').get();
+  //.expand('roleDefinitionId')
+	  
+  console.log(roleAssignmentScheduleRequests);
+    
 }
   
 ////functions 
@@ -99,25 +106,23 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
  return authResponse;
 }
 
-async function graphClient(accessToken:string){
-  const graphClient = await getGraphClient(accessToken);      
-  const user = await graphClient.api('/roleManagement/directory/roleAssignmentScheduleRequests')
-  //.expand('roleDefinitionId')
-	//.select('principalId,action,roleDefinitionId')
-  .get().then(a => {console.log(a)}).catch(a =>  {console.log(a)});
-  console.log(user);
-  console.log("returned");
+// async function graphClient(accessToken:string){
+//   const graphClient = await getGraphClient(accessToken);     
+  
+// }
+
+{
+  async function authProvider(authProvider : AuthProvider)
+  return accessToken;
 }
 
 async function getGraphClient(accessToken : string)
-{
+{   
   return Client.init(
     {
-      authProvider : (done) => {
-        done(null, accessToken);
-      }
+      authProvider : 
     }
-  )
+    );
 }
 ////Events
 

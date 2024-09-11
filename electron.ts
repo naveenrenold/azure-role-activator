@@ -8,7 +8,7 @@ import {
   Configuration,
   CryptoProvider,
 } from "@azure/msal-node";
-import { AuthProvider, Client } from "@microsoft/microsoft-graph-client";
+import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
 
 ////Constants declare
 var win : BrowserWindow;
@@ -42,7 +42,7 @@ async function getTokenAsync(event : IpcMainInvokeEvent, clientId : string, tena
     var client = await getGraphClient(authResponse.accessToken);
     let roleAssignmentScheduleRequests = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests').select('roleDefinitionId').get();
   //.expand('roleDefinitionId')
-	  
+	  console.log('Ended :)')
   console.log(roleAssignmentScheduleRequests);
     
 }
@@ -99,28 +99,21 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
   
   const authResponse =await pca.acquireTokenByCode({
     redirectUri: redirectUri,
-    scopes: scopes,
+    scopes: ['RoleManagement.ReadWrite.Directory'],
     code: authCode ?? "",
     codeVerifier: pkceCodes.verifier
 });
  return authResponse;
 }
 
-// async function graphClient(accessToken:string){
-//   const graphClient = await getGraphClient(accessToken);     
-  
-// }
-
-{
-  async function authProvider(authProvider : AuthProvider)
-  return accessToken;
-}
 
 async function getGraphClient(accessToken : string)
 {   
   return Client.init(
     {
-      authProvider : 
+      authProvider: (done : AuthProviderCallback) => {
+        done(null, accessToken);
+    }
     }
     );
 }

@@ -6,3 +6,6 @@
 
 -----
 1. why graph api client not working :(
+
+
+    https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules

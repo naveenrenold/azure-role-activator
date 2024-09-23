@@ -3,8 +3,6 @@ import './App.css';
 
 function App() {
   //Constants
-  // const defaultClientIdText = '5ad548fe-569a-465f-a98f-188af25d9b47';
-  // const defaultTenantIdText = 'b6281daa-0870-4760-9be1-f6b0cd37bfa7';
   const defaultClientIdText = '68f0ecbf-8e17-4ae2-a92a-275a7f02ea33';
   const defaultTenantIdText = '24d2489e-7bb3-4339-94a2-207bb2a75abc';
   const graphApiData = [{
@@ -52,7 +50,7 @@ function App() {
       </div>      
       </div>      
         <div className ='flexbox-row-center'>
-      <button className='flexbutton' type='submit' onClick={e => window.electronAPI.getToken(clientIdText, tenantIdText)}>Get roles</button>            
+      <button className='flexbutton' type='submit' onClick={e => window.electronAPI.getEligibleRoles(clientIdText, tenantIdText)}>Get roles</button>            
       </div>
       <table border={1}>
         <tr>

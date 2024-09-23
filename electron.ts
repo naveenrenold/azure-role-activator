@@ -9,6 +9,7 @@ import {
   CryptoProvider,
 } from "@azure/msal-node";
 import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
+import axios from "axios";
 
 ////Constants declare
 var win : BrowserWindow;
@@ -22,28 +23,37 @@ const pkceCodes = {
 }
 let accessToken = '';
 
-////////////////////////////////////////////////
-
 ////Main event
-async function getTokenAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string )
+async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string )
   {
-    console.log(`sender: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
+    //log and create objects
+    console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
     const MSAL_CONFIG : Configuration = {
       auth: {
         clientId: clientId,
         authority: `https://login.microsoftonline.com/${tenantId}`
       }
     };
-
     const pca = new PublicClientApplication(MSAL_CONFIG);
+
+    //get token
     const authResponse = await getTokenInteractive(scopes, pca);
     console.log(authResponse)
-    accessToken = authResponse.accessToken;    
-    var client = await getGraphClient(authResponse.accessToken);
-    let roleAssignmentScheduleRequests = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests').select('roleDefinitionId').get();
-  //.expand('roleDefinitionId')
-	  console.log('Ended :)')
-  console.log(roleAssignmentScheduleRequests);
+    accessToken = authResponse.accessToken;
+    
+    //create graph client
+    // var client = await getGraphClient(authResponse.accessToken);
+    // let roleAssignmentScheduleRequests = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests').select('roleDefinitionId').get();
+    //.expand('roleDefinitionId')
+	  
+    let roleAssignmentScheduleRequests = await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
+          headers : {
+            Authorization : `Bearer ${authResponse.accessToken}`
+          }
+    })
+    
+    console.log('Get Eligible roles api finished :)')
+    console.log(roleAssignmentScheduleRequests);
     
 }
   
@@ -99,7 +109,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
   
   const authResponse =await pca.acquireTokenByCode({
     redirectUri: redirectUri,
-    scopes: ['RoleManagement.ReadWrite.Directory'],
+    scopes: scopes,
     code: authCode ?? "",
     codeVerifier: pkceCodes.verifier
 });
@@ -117,12 +127,13 @@ async function getGraphClient(accessToken : string)
     }
     );
 }
+
 ////Events
 
 //App start
 
 app.whenReady().then(() => {
-  ipcMain.handle("getToken", (event : IpcMainInvokeEvent , clientId, tenantId) => { getTokenAsync(event ,clientId, tenantId)})     
+  ipcMain.handle("getEligibleRoles", (event : IpcMainInvokeEvent , clientId, tenantId) => { getEligibleRolesAsync(event ,clientId, tenantId)})     
    createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

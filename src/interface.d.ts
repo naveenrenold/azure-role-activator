@@ -1,5 +1,5 @@
 export interface IElectronAPI{
-    getToken : (clientId : string , tenantId : string) => Promise<void>
+    getEligibleRoles : (clientId : string , tenantId : string) => Promise<void>
 }
 
 declare global{

@@ -50,7 +50,7 @@ function App() {
       </div>      
       </div>      
         <div className ='flexbox-row-center'>
-      <button className='flexbutton' type='submit' onClick={e => window.electronAPI.getEligibleRoles(clientIdText, tenantIdText)}>Get roles</button>            
+      <button className='flexbutton' type='submit' onClick={e => window.electronAPI.getEligibleRoles(clientIdText, tenantIdText).then((a) => {console.log('Reached'+ a[0].roleName)})}>Get roles</button>            
       </div>
       <table border={1}>
         <tr>

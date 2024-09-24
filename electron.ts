@@ -52,10 +52,8 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
           }
     })
     
-    console.log('Get Eligible roles api finished :)')
-    console.log(roleAssignmentScheduleRequests);
-    
-}
+    console.log('Get Eligible roles api finished :)')    
+  };
   
 ////functions 
 //Create window

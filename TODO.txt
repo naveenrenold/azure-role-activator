@@ -30,3 +30,6 @@ To do today
 3. Fill table with data and make submit button maybe. -this
 4. Format the code for getting token
 5. Need to send data from electron to react. I can reload same page with data
+
+--
+.1figur3e out promises

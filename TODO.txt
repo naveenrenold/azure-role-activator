@@ -24,12 +24,5 @@ class MyAuthenticationProvider implements AuthenticationProvider {
 
 
 -------
-To do today
-1. Try the api call method for graph api - done
-2. Get and activate role graph api calls - need to do
-3. Fill table with data and make submit button maybe. -this
-4. Format the code for getting token
-5. Need to send data from electron to react. I can reload same page with data
-
---
-.1figur3e out promises
+To do:
+1.	How to authenticate across sessions

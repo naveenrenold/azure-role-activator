@@ -24,8 +24,8 @@ const pkceCodes = {
 let accessToken = '';
 
 ////Main event
-async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string )
-  {
+async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string ) : Promise<PIMRoles[]>
+  {    
     //log and create objects
     console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
     const MSAL_CONFIG : Configuration = {
@@ -52,7 +52,10 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
           }
     })
     
-    console.log('Get Eligible roles api finished :)')    
+    let role: PIMRoles[] = [
+    { roleName: 'admin', roleId: 'Contributor'}, ];
+    console.log('Get Eligible roles api finished :)')   
+    return(role);    
   };
   
 ////functions 
@@ -131,7 +134,7 @@ async function getGraphClient(accessToken : string)
 //App start
 
 app.whenReady().then(() => {
-  ipcMain.handle("getEligibleRoles", (event : IpcMainInvokeEvent , clientId, tenantId) => { getEligibleRolesAsync(event ,clientId, tenantId)})     
+  ipcMain.handle("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId) => { return await getEligibleRolesAsync(event ,clientId, tenantId);})     
    createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -146,3 +149,8 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+export interface PIMRoles{
+  roleName : string;
+  roleId : string;
+ }

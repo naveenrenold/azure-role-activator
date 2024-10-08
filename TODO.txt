@@ -26,3 +26,8 @@ class MyAuthenticationProvider implements AuthenticationProvider {
 -------
 To do:
 1.	How to authenticate across sessions
+2. Use main to renderer and vice versa. one ways
+3. Might need to have a login window and display window
+4. Think in states react.
+5. Dark night stars.
+6. is it possible to play mario, prob not

@@ -31,3 +31,7 @@ To do:
 4. Think in states react.
 5. Dark night stars.
 6. is it possible to play mario, prob not
+
+14/10
+:)
+Routing done, continue to use this to make your app better :D

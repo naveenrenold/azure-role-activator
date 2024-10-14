@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import './App.css';
-import { PIMRoles } from './interface';
+import {useState} from 'react';
+import './Login.css';
+import { PIMRoles } from '../interface';
 
-function App() {
+function Login() {
   //Constants
   const defaultClientIdText = '68f0ecbf-8e17-4ae2-a92a-275a7f02ea33';
   const defaultTenantIdText = '24d2489e-7bb3-4339-94a2-207bb2a75abc';
@@ -78,4 +78,4 @@ let [graphApiData, updateGraphApiData] = useState(initialGraphApiData);
   );
 }
 
-export default App;
+export default Login;

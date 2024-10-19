@@ -14,7 +14,7 @@ import axios from "axios";
 ////Constants declare
 var win : BrowserWindow;
 const scopes = ["RoleManagement.ReadWrite.Directory"];
-const redirectUri = "http://localhost:3000/";
+const redirectUri = "http://localhost:3000/table";
 const cryptoProvider = new CryptoProvider();
 const pkceCodes = {
   challengeMethod: "S256",
@@ -24,7 +24,7 @@ const pkceCodes = {
 let accessToken = '';
 
 ////Main event
-async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string ) : Promise<PIMRoles[]>
+async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string ) : Promise<void>
   {    
     //log and create objects
     console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
@@ -55,7 +55,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     let role: PIMRoles[] = [
     { roleName: 'admin', roleId: 'Contributor'}, ];
     console.log('Get Eligible roles api finished :)')   
-    return(role);    
+    win.webContents.send('getPimRoles', role);
   };
   
 ////functions 
@@ -134,7 +134,7 @@ async function getGraphClient(accessToken : string)
 //App start
 
 app.whenReady().then(() => {
-  ipcMain.handle("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId) => { return await getEligibleRolesAsync(event ,clientId, tenantId);})     
+  ipcMain.on("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId) => { await getEligibleRolesAsync(event ,clientId, tenantId);})     
    createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

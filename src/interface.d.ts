@@ -1,5 +1,6 @@
 export interface IElectronAPI{
     getEligibleRoles : (clientId : string , tenantId : string) => Promise<PIMRoles[]>
+    getPIMRoles : (callback : any) => any
 }
 
 declare global{

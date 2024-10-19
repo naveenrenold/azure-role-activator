@@ -1,7 +1,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import Login from './login/Login';
-import Table from './table/Table';
+import Login from './components/login';
+import Table from './components/table';
 import {Route, Routes, BrowserRouter} from 'react-router-dom';
 
 const routing = (

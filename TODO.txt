@@ -35,3 +35,6 @@ To do:
 14/10
 :)
 Routing done, continue to use this to make your app better :D
+
+19/10	
+1.	routing is fine but how table will get data?. I know!

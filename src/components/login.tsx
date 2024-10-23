@@ -42,7 +42,13 @@ function Login() {
       </div>      
         <div className ='flexbox-row-center'>
       <button className='flexbutton' type='submit' onClick= {async e =>  {console.log("started react"); await window.electronAPI.getEligibleRoles(clientIdText, tenantIdText); console.log('finished react;');setClientIdText('Sucess')}}>Get roles</button>              
-      </div>            
+      </div>
+      <div className ='flexbox-row-center'>
+      <label>
+        <input type="checkbox" name='remember checkbox' defaultChecked = {false}  title='remember checkbox' placeholder='Remember client and tenant id'/>
+        Remember client and tenant id
+        </label>
+      </div>
     </div>
   );
 }

@@ -26,7 +26,7 @@ function Login() {
         <div className = 'flexbox-item-default-margins-text'>
       <label>Enter your app/clientId :
       <div className = 'flexbox-item-default-margins-textbox'>
-        <input type='text' title='clientId' id='clientId' onChange={e => handleClientIdChange(e.target.value)} placeholder='Enter you clientId' defaultValue = {defaultClientIdText}></input>            
+        <input className='textbox' type='text' title='clientId' id='clientId' onChange={e => handleClientIdChange(e.target.value)} placeholder='Enter you clientId' defaultValue = {defaultClientIdText}></input>            
       </div>
       </label>
       </div>      
@@ -35,7 +35,7 @@ function Login() {
         <div className = 'flexbox-item-default-margins-text'>
       <label>Enter your tenantId :
       <div className = 'flexbox-item-default-margins-textbox'>
-        <input type='text' title='tenantId' id='tenantId' onChange={ e => handleTenantIdChange(e.target.value)} placeholder='Enter you tenantId' defaultValue = {defaultTenantIdText}></input>
+        <input className='textbox' type='text' title='tenantId' id='tenantId' onChange={ e => handleTenantIdChange(e.target.value)} placeholder='Enter you tenantId' defaultValue = {defaultTenantIdText}></input>
       </div>
       </label>
       </div>      

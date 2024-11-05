@@ -1,40 +1,13 @@
-1. Electron auth works
-2. Make a graph api call to get data - how graph api works :(
-3. Same page add a table in react
-4. It should fill in values from request
-5. Then should be able to make the call  
-
------
-1. why graph api client not working :(
+5/11:
+1.	UI make it flexbox responsive with percentages : 1333 * 631 : 444 * 207; 111 : 52.5
 
 
-    https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules
+100/12 = 
 
-    // MyAuthenticationProvider.ts
-import { AuthenticationProvider } from "@microsoft/microsoft-graph-client";
+12*8= 96
 
-class MyAuthenticationProvider implements AuthenticationProvider {
-	/**
-	 * This method will get called before every request to the msgraph server
-	 * This should return a Promise that resolves to an accessToken (in case of success) or rejects with error (in case of failure)
-	 * Basically this method will contain the implementation for getting and refreshing accessTokens
-	 */
-	public async getAccessToken(): Promise<string> {}
-}
+2. need to limit responsiveness
+	-Design for browser only but use percentages
+	-Ignore mobiles
 
-
--------
-To do:
-1.	How to authenticate across sessions
-2. Use main to renderer and vice versa. one ways
-3. Might need to have a login window and display window
-4. Think in states react.
-5. Dark night stars.
-6. is it possible to play mario, prob not
-
-14/10
-:)
-Routing done, continue to use this to make your app better :D
-
-19/10	
-1.	routing is fine but how table will get data?. I know!
+	3. use percentages

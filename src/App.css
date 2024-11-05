@@ -1,18 +1,18 @@
-.mainDiv{
+.login-body{
     font-family:flex;
-    font-size: 16px;
+    font-size: 1rem;
 }
 .flexbox-row-center{
     display:flex;
     justify-content: center;    
 }
-.flexbox-item-default-margins-text{
+.flexitem-margins-text{
     display:flex;
     margin:2px 5px 5px 5px;
     padding:'1px 1px 1px 1px';
-    font-size: 20px;
+    font-size: 2rem;
 }
-.flexbox-item-default-margins-textbox{
+.flexitem-margins-textbox{
     display:flex;
     margin:2px 5px 5px 5px;
     padding:'4px 4px 4px 4px';
@@ -36,14 +36,14 @@ body{
     font-size: 42px;
     font-weight: 900;    
     text-align: center;
-    display: inline-block;
+    /* display: inline-block;
     align-items: center;    
-    width: 80%;
-    margin-top: 4%;
+    width: 80%; */    
     letter-spacing: 2px;    
 }
-.inline{
-    display: inline-block;
+.inline-1{    
+    width: 25%;
+    height: 25%;
 }
 .flex{
     display:flex;
@@ -54,4 +54,13 @@ body{
 .footer{
     width:100%;
     display:inline-block;          
+}
+.flex-left{
+    flex-direction: row-reverse;
+    justify-content: flex-start;    
+    align-items: flex-end;
+}
+.root{
+    width:50%;
+    height:90%;
 }

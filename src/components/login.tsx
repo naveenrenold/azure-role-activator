@@ -21,20 +21,21 @@ function Login() {
   
   //main
   return (      
-    <div className='mainDiv'>      
-      <div className='flexbox-row-center'>
-        <div className = 'flexbox-item-default-margins-text'>
+    <div className='login-body'>      
+    <div className='flexbox-row-center PIMHeading'>PIM</div>
+      <div className='flexbox-row-center'>      
+        <div className = 'flexitem-margins-text'>
       <label>Enter your app/clientId :
-      <div className = 'flexbox-item-default-margins-textbox'>
+      <div className = 'flexitem-margins-textbox'>
         <input className='textbox' type='text' title='clientId' id='clientId' onChange={e => handleClientIdChange(e.target.value)} placeholder='Enter you clientId' defaultValue = {defaultClientIdText}></input>            
       </div>
       </label>
       </div>      
       </div>
       <div className='flexbox-row-center'>
-        <div className = 'flexbox-item-default-margins-text'>
+        <div className = 'flexitem-margins-text'>
       <label>Enter your tenantId :
-      <div className = 'flexbox-item-default-margins-textbox'>
+      <div className = 'flexitem-margins-textbox'>
         <input className='textbox' type='text' title='tenantId' id='tenantId' onChange={ e => handleTenantIdChange(e.target.value)} placeholder='Enter you tenantId' defaultValue = {defaultTenantIdText}></input>
       </div>
       </label>

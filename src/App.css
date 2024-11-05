@@ -1,6 +1,7 @@
 .login-body{
     font-family:flex;
-    font-size: 1rem;
+    font-size: 16px;
+    height:100%    
 }
 .flexbox-row-center{
     display:flex;
@@ -10,7 +11,7 @@
     display:flex;
     margin:2px 5px 5px 5px;
     padding:'1px 1px 1px 1px';
-    font-size: 2rem;
+    font-size: 20px;
 }
 .flexitem-margins-textbox{
     display:flex;
@@ -32,35 +33,26 @@ body{
     color: yellow;
     background-color: rgb(54, 2, 79);
 }
-.PIMHeading{
-    font-size: 42px;
-    font-weight: 900;    
-    text-align: center;
-    /* display: inline-block;
-    align-items: center;    
-    width: 80%; */    
-    letter-spacing: 2px;    
+.textbox{
+    padding: 4px;
 }
-.inline-1{    
-    width: 25%;
-    height: 25%;
+.header{
+    margin-top: 2%;
+    font-size: 60px;
+    font-weight: 900;
+    justify-content: center;    
+    letter-spacing: 2px;
+    height: 10%;    
+}
+.root{
+    justify-content: center;
+    margin-top: 2%;
+    height: 60%;
 }
 .flex{
     display:flex;
 }
-.textbox{
-    padding: 4px;
-}
 .footer{
-    width:100%;
-    display:inline-block;          
-}
-.flex-left{
     flex-direction: row-reverse;
-    justify-content: flex-start;    
-    align-items: flex-end;
-}
-.root{
-    width:50%;
-    height:90%;
+    height:10%;
 }

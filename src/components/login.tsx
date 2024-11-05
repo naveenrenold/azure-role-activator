@@ -21,8 +21,7 @@ function Login() {
   
   //main
   return (      
-    <div className='login-body'>      
-    <div className='flexbox-row-center PIMHeading'>PIM</div>
+    <div className='login-body'>          
       <div className='flexbox-row-center'>      
         <div className = 'flexitem-margins-text'>
       <label>Enter your app/clientId :

@@ -27,7 +27,7 @@ let accessToken = '';
 async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string ) : Promise<void>
   {    
     //log and create objects
-    console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
+    //console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
     const MSAL_CONFIG : Configuration = {
       auth: {
         clientId: clientId,
@@ -38,24 +38,30 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
 
     //get token
     const authResponse = await getTokenInteractive(scopes, pca);
-    console.log(authResponse)
+    //console.log(authResponse)
     accessToken = authResponse.accessToken;
     
     //create graph client
-    // var client = await getGraphClient(authResponse.accessToken);
-    // let roleAssignmentScheduleRequests = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests').select('roleDefinitionId').get();
-    //.expand('roleDefinitionId')
+    var client = await getGraphClient(authResponse.accessToken);
+    let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	  
-    let roleAssignmentScheduleRequests = await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
+    let roleAssignmentScheduleRequests = await axios.get<any>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`
           }
     })
-    
-    let role: PIMRoles[] = [
-    { roleName: 'admin', roleId: 'Contributor'}, ];
-    console.log('Get Eligible roles api finished :)')   
-    win.webContents.send('getPimRoles', role);
+    console.log(roleAssignmentScheduleRequests.data.value[0]);
+    console.log("value:"+roleAssignmentScheduleRequests.data.value);
+    var graphData : PIMRoles[] = roleAssignmentScheduleRequests.data.map((data : any) : PIMRoles =>  {       
+      return{ 
+      roleId: data['roleDefinitionId'],
+       roleName :data['principalId']
+      }
+    })
+    // let role: PIMRoles[] = [
+    // { roleName: 'admin', roleId: 'Contributor'}, ];
+    //console.log('Get Eligible roles api finished :)')   
+    win.webContents.send('getPimRoles', graphData);
   };
   
 ////functions 
@@ -108,6 +114,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
   const authCodeUrl = await pca.getAuthCodeUrl(authCodeUrlParams);
   const authCode = await listenForAuthCodeAsync(win, authCodeUrl);  
   
+
   const authResponse =await pca.acquireTokenByCode({
     redirectUri: redirectUri,
     scopes: scopes,
@@ -115,6 +122,27 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
     codeVerifier: pkceCodes.verifier
 });
  return authResponse;
+//   var account = (await pca.getAllAccounts())[0];
+//   console.log('account'+account.homeAccountId);
+//   const authResponse = await pca.acquireTokenSilent({    
+//     scopes: scopes,
+//     account: account 
+// }).then((accessTokenResponse) => {
+//   console.log('Silent token');
+//   return accessTokenResponse;  
+// }).catch( async (error) => {
+//   console.log(error);
+//   console.log('Interactive token');
+//   const authResponse =await pca.acquireTokenByCode({
+//     redirectUri: redirectUri,
+//     scopes: scopes,
+//     code: authCode ?? "",
+//     codeVerifier: pkceCodes.verifier
+// });
+//  return authResponse;
+// }
+// )
+// return authResponse;
 }
 
 

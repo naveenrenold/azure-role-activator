@@ -11,3 +11,29 @@
 	-Ignore mobiles
 
 	3. use percentages
+11/11/24
+
+1. try to wrapup UI
+ need to format ui but leave it need to correct grpah api right now
+ check the graph api call output, need to perfect it first or it joever
+
+ 2. got the graph api format, now need to find ways to show the role name and activate it
+
+
+ {
+   id: '2ad1d71a-3f5b-4bb9-8bfa-cb34091aa9aa',
+   principalId: '4e98736c-8fa1-447b-9110-a1bc930db1d8',
+   roleDefinitionId: '62e90394-69f5-4237-9190-012177145e10',
+   directoryScopeId: '/',
+   appScopeId: null,
+   createdUsing: '2ad1d71a-3f5b-4bb9-8bfa-cb34091aa9aa',
+   createdDateTime: '2024-11-11T07:32:37.117Z',
+   modifiedDateTime: '0001-01-01T08:00:00Z',
+   status: 'Provisioned',
+   memberType: 'Direct',
+   scheduleInfo: {
+     startDateTime: '2024-11-11T07:32:37.117Z',
+     recurrence: null,
+     expiration: { type: 'noExpiration', endDateTime: null, duration: null }
+   }
+ }

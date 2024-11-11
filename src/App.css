@@ -23,11 +23,11 @@
     margin:2px 5px 5px 5px;
     padding:7px 7px 7px 7px;
     background-color :orange;
-    color : darkslategray;
+    color : purple;
+    font-weight: 600;
 }
 table{    
-    margin : 20px;
-    color: black;
+    margin : 20px;    
 }
 body{
     color: yellow;
@@ -55,4 +55,10 @@ body{
 .footer{
     flex-direction: row-reverse;
     height:10%;
+}
+th{
+color:orange
+}
+td{
+color:yellow
 }

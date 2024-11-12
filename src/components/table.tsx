@@ -6,11 +6,11 @@ function Table()
 {
     const initialGraphApiData : PIMRoles[] = [
         {
-          roleId : 'Role 1',
+          roleId : 'Placeholder 1',
           roleName : 'Admin Role'
         },
         {
-          roleId : 'Role 2',
+          roleId : 'Placeholder 2',
           roleName : 'Reader Role'
         }
     ];
@@ -26,9 +26,9 @@ function Table()
             <table border={1}>
         <tbody>
         <tr>
-        <th>Name</th>
-        <th>Mail</th>
-        <th>Surname</th>
+        <th>RoleId</th>
+        <th>RoleName</th>
+        <th>Activate</th>
         </tr>
         {
         graphApiData.map((value,i) => {

@@ -42,21 +42,27 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     accessToken = authResponse.accessToken;
     
     //create graph client
-    var client = await getGraphClient(authResponse.accessToken);
-    let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
+    // var client = await getGraphClient(authResponse.accessToken);
+    // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	  
-    let roleAssignmentScheduleRequests = await axios.get<any>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
+    let roleAssignmentScheduleRequests = await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`
           }
     })
     console.log(roleAssignmentScheduleRequests.data.value[0]);
     console.log("value:"+roleAssignmentScheduleRequests.data.value);
-    var graphData : PIMRoles[] = roleAssignmentScheduleRequests.data.map((data : any) : PIMRoles =>  {       
-      return{ 
-      roleId: data['roleDefinitionId'],
-       roleName :data['principalId']
-      }
+    var graphData : PIMRoles[] = roleAssignmentScheduleRequests.data.value.map((data: any) : PIMRoles => {                   
+      return {
+        roleId: data['roleDefinitionId'],
+       roleName : data['principalId']      
+     } 
+    });
+    let roleActivationRequests = await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', {
+          headers : {
+            Authorization : `Bearer ${authResponse.accessToken}`,
+            "Content-Type" : "application/json"
+          }
     })
     // let role: PIMRoles[] = [
     // { roleName: 'admin', roleId: 'Contributor'}, ];
@@ -145,6 +151,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 // return authResponse;
 }
 
+async function get
 
 async function getGraphClient(accessToken : string)
 {   
@@ -182,3 +189,19 @@ export interface PIMRoles{
   roleName : string;
   roleId : string;
  }
+ 
+ export interface unifiedRoleAssignmentScheduleRequest{
+  action : string,
+  customData : string,
+  principalId : string,
+  roleDefinitionId : string,
+  directoryScopeId : string,
+  appScopeId : string,
+  justification : string,
+  scheduleInfo : any,
+  ticketInfo : any
+ }
+
+
+
+ 

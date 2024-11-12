@@ -45,25 +45,47 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	  
-    let roleAssignmentScheduleRequests = await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
+    let roleAssignmentScheduleRequests : PIMRoles[] = (await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`
           }
-    })
-    console.log(roleAssignmentScheduleRequests.data.value[0]);
-    console.log("value:"+roleAssignmentScheduleRequests.data.value);
-    var graphData : PIMRoles[] = roleAssignmentScheduleRequests.data.value.map((data: any) : PIMRoles => {                   
+    })).data;
+    let i = 0 ;
+    console.log(roleAssignmentScheduleRequests);
+    roleAssignmentScheduleRequests.forEach((element : any) => {
+      console.log(i++);
+      console.log(element);
+    });        
+    var graphData : PIMRoles[] = roleAssignmentScheduleRequests.map((data: any) : PIMRoles => {                   
       return {
         roleId: data['roleDefinitionId'],
-       roleName : data['principalId']      
+       roleName : data['principalId'],
+       scheduleInfo : data['scheduleInfo']      
      } 
     });
-    let roleActivationRequests = await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', {
+
+    var request :unifiedRoleAssignmentScheduleRequest = {
+      action : "selfActivate",
+      principalId : graphData[0].roleName,
+      roleDefinitionId : graphData[0].roleId,
+      directoryScopeId : '/',
+      justification : 'role activate',
+      scheduleInfo : graphData[0].scheduleInfo
+    }
+    
+     let roleActivationRequests = await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`,
             "Content-Type" : "application/json"
           }
-    })
+    }).then(() =>{
+     // console.log('Role activation requests succeeded : ');      
+    }
+    ).catch((error : any) => {
+      //console.log('Failed :(');      
+     // console.log(error);
+    });
+
     // let role: PIMRoles[] = [
     // { roleName: 'admin', roleId: 'Contributor'}, ];
     //console.log('Get Eligible roles api finished :)')   
@@ -151,7 +173,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 // return authResponse;
 }
 
-async function get
+
 
 async function getGraphClient(accessToken : string)
 {   
@@ -188,20 +210,31 @@ app.on("window-all-closed", () => {
 export interface PIMRoles{
   roleName : string;
   roleId : string;
+  scheduleInfo? : any;
  }
  
  export interface unifiedRoleAssignmentScheduleRequest{
   action : string,
-  customData : string,
+  customData? : string,
   principalId : string,
   roleDefinitionId : string,
   directoryScopeId : string,
-  appScopeId : string,
+  appScopeId? : string,
   justification : string,
   scheduleInfo : any,
-  ticketInfo : any
+  ticketInfo? : any
  }
 
+ export interface requestSchedule{
+  expiration? : expirationPattern,
+  recurrence? : any,
+  startDateTime? : any
+ }
 
+ export interface expirationPattern{
+  duration? : string,
+  endDateTime? : any,
+  type? : string
+ }
 
  

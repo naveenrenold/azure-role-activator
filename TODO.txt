@@ -37,3 +37,9 @@
      expiration: { type: 'noExpiration', endDateTime: null, duration: null }
    }
  }
+
+roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()
+
+ 12/11:
+ 1. activate role with graph api call
+ 2. need to continue with role activation

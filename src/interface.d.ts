@@ -11,4 +11,5 @@ declare global{
 export interface PIMRoles{
  roleName : string;
  roleId : string;
+ scheduleInfo? : any;
 }

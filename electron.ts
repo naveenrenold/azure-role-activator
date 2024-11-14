@@ -45,29 +45,20 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	  
-    let roleAssignmentScheduleRequests : PIMRoles[] = (await axios.get('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules', {
+    let roleAssignmentScheduleRequests  = (await axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`
           }
-    })).data;
+    })).data.value;
     let i = 0 ;
-    console.log(roleAssignmentScheduleRequests);
-    roleAssignmentScheduleRequests.forEach((element : any) => {
-      console.log(i++);
-      console.log(element);
-    });        
-    var graphData : PIMRoles[] = roleAssignmentScheduleRequests.map((data: any) : PIMRoles => {                   
-      return {
-        roleId: data['roleDefinitionId'],
-       roleName : data['principalId'],
-       scheduleInfo : data['scheduleInfo']      
-     } 
-    });
+    console.log(roleAssignmentScheduleRequests[0]);     
+   
+    var graphData = roleAssignmentScheduleRequests;
 
     var request :unifiedRoleAssignmentScheduleRequest = {
       action : "selfActivate",
-      principalId : graphData[0].roleName,
-      roleDefinitionId : graphData[0].roleId,
+      principalId : graphData[0].principalId,
+      roleDefinitionId : graphData[0].roleDefinition.id,
       directoryScopeId : '/',
       justification : 'role activate',
       scheduleInfo : graphData[0].scheduleInfo
@@ -79,15 +70,14 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
             "Content-Type" : "application/json"
           }
     }).then(() =>{
-     // console.log('Role activation requests succeeded : ');      
+      console.log('Role activation requests succeeded : ');      
     }
-    ).catch((error : any) => {
-      //console.log('Failed :(');      
-     // console.log(error);
+    ).catch((error : any) => {        
+     console.log(`Failed :( with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
     });
 
     // let role: PIMRoles[] = [
-    // { roleName: 'admin', roleId: 'Contributor'}, ];
+    // { displayName: 'admin', roleId: 'Contributor'}, ];
     //console.log('Get Eligible roles api finished :)')   
     win.webContents.send('getPimRoles', graphData);
   };
@@ -207,12 +197,6 @@ app.on("window-all-closed", () => {
   }
 });
 
-export interface PIMRoles{
-  roleName : string;
-  roleId : string;
-  scheduleInfo? : any;
- }
- 
  export interface unifiedRoleAssignmentScheduleRequest{
   action : string,
   customData? : string,
@@ -235,6 +219,18 @@ export interface PIMRoles{
   duration? : string,
   endDateTime? : any,
   type? : string
+ }
+ export interface roleDefinition{
+  displayName : string,
+  id : string
+ }
+ export interface PIMRoles{
+  roleDefinition : roleDefinition,
+  scheduleInfo : any,
+  principalId : string
+ }
+ export interface roleAssignmentScheduleResponse{
+  value : PIMRoles[];
  }
 
  

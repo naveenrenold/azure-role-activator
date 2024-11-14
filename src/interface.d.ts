@@ -8,8 +8,12 @@ declare global{
         electronAPI : IElectronAPI
     }
 }
+export interface roleDefinition{
+    displayName : string,
+    id : string
+   }
 export interface PIMRoles{
- roleName : string;
- roleId : string;
- scheduleInfo? : any;
+    roleDefinition : roleDefinition,
+    scheduleInfo? : any,
+    principalId? : string
 }

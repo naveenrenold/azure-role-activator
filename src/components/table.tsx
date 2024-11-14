@@ -6,12 +6,18 @@ function Table()
 {
     const initialGraphApiData : PIMRoles[] = [
         {
-          roleId : 'Placeholder 1',
-          roleName : 'Admin Role'
+          roleDefinition : 
+          {
+            id : 'PlaceHolder 1',
+            displayName : 'Admin Role'
+          }       
         },
         {
-          roleId : 'Placeholder 2',
-          roleName : 'Reader Role'
+          roleDefinition : 
+          {
+            id : 'PlaceHolder 2',
+            displayName : 'Contibutor Role'
+          }
         }
     ];
     let [graphApiData, updateGraphApiData] = useState(initialGraphApiData); 
@@ -34,9 +40,11 @@ function Table()
         graphApiData.map((value,i) => {
           return(
 <tr key={i}>
-  <td>{value.roleId}</td>
-  <td>{value.roleName}</td>
-  <td>{''}</td>
+  <td>{value.roleDefinition?.id}</td>
+  <td>{value.roleDefinition?.displayName}</td>
+  <td>
+    <input type ='checkbox' title = 'table-checkbox' ></input>
+  </td>
 </tr>
           )          
         }) 

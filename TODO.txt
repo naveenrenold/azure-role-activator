@@ -43,3 +43,10 @@ roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()
  12/11:
  1. activate role with graph api call
  2. need to continue with role activation
+
+ 14/11
+ 1. Activate role with app
+ to do :
+ 1. Add activate button
+ 2. check activate api working
+ 3. make flow to activate

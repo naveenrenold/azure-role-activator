@@ -1,6 +1,5 @@
 import {useState} from 'react';
 import '../App.css';
-import { PIMRoles } from '../interface';
 
 function Login() {
   //Constants

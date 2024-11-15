@@ -59,7 +59,7 @@ function Table()
   <td>{value.roleDefinition?.id}</td>
   <td>{value.roleDefinition?.displayName}</td>
   <td>
-    <input type ='checkbox' title = 'table-checkbox' value={value.roleDefinition.id} checked = {value.checked} onChange = {(value.roleDefinition.id) => checkBoxChecked}></input>
+    <input type ='checkbox' title = 'table-checkbox' value={value.roleDefinition.id} checked = {value.checked} onChange = { () =>checkBoxChecked(value.roleDefinition.id)}></input>
   </td>
 </tr>
           )          

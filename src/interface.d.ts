@@ -15,5 +15,6 @@ export interface roleDefinition{
 export interface PIMRoles{
     roleDefinition : roleDefinition,
     scheduleInfo? : any,
-    principalId? : string
+    principalId? : string,
+    checked? : boolean
 }

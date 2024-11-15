@@ -37,10 +37,9 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     const pca = new PublicClientApplication(MSAL_CONFIG);
 
     //get token
-    const authResponse = await getTokenInteractive(scopes, pca);
-    //console.log(authResponse)
+    const authResponse = await getTokenInteractive(scopes, pca);    
     accessToken = authResponse.accessToken;
-    
+    console.log(authResponse.accessToken)
     //create graph client
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
@@ -49,10 +48,8 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`
           }
-    })).data.value;
-    let i = 0 ;
-    console.log(roleAssignmentScheduleRequests[0]);     
-   
+    })).data.value;    
+    console.log(roleAssignmentScheduleRequests);        
     var graphData = roleAssignmentScheduleRequests;
 
     var request :unifiedRoleAssignmentScheduleRequest = {
@@ -64,7 +61,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
       scheduleInfo : graphData[0].scheduleInfo
     }
     
-     let roleActivationRequests = await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
+    let roleActivationRequests = await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
             Authorization : `Bearer ${authResponse.accessToken}`,
             "Content-Type" : "application/json"

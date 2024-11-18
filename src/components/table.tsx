@@ -9,15 +9,17 @@ function Table()
           roleDefinition : 
           {
             id : 'PlaceHolder 1',
-            displayName : 'Admin Role'
-          }       
+            displayName : 'Admin Role',            
+          },
+          checked : true
         },
         {
           roleDefinition : 
           {
             id : 'PlaceHolder 2',
             displayName : 'Contibutor Role'
-          }
+          },
+          checked : false
         }
     ];
     let [graphApiData, updateGraphApiData] = useState(initialGraphApiData); 
@@ -28,8 +30,8 @@ function Table()
     );
     
     function checkBoxChecked(id: string){
-       graphApiData = graphApiData.map((role) => {
-        if(role.principalId === id)
+       let tempGraphData = graphApiData.map((role) => {
+        if(role.roleDefinition.id === id)
         {
           return {
             roleDefinition : role.roleDefinition,
@@ -40,7 +42,34 @@ function Table()
         }
         return role;
        })
-       updateGraphApiData(graphApiData);
+       updateGraphApiData(tempGraphData);
+    }
+
+    function activateRoles()
+    {
+      let roles = graphApiData.filter((role) => {
+        return role.checked ?? false
+      });
+      let success = window.electronAPI.activateRoles(roles);
+      if(success)
+      {
+        unCheckBoxes();
+      }
+    }
+    function unCheckBoxes()
+    { 
+      let tempGraphData = graphApiData.map((role) => {
+        return {
+          roleDefinition : role.roleDefinition,
+          checked : false,
+          principalId : role.principalId,
+          scheduleInfo : role.scheduleInfo
+        }      
+     })     
+      // graphApiData.forEach((role : PIMRoles) => {
+      //   role.checked = false;
+      // })
+      updateGraphApiData(tempGraphData);
     }
 
     return (
@@ -68,8 +97,8 @@ function Table()
  </tbody>
       </table>
       <div>
-      <button>Activate Roles</button>
-      <button>Reset</button>
+      <button onClick={e => activateRoles()}>Activate Roles</button>
+      <button onClick={e => unCheckBoxes()}>Reset</button>
       </div>
         </div>
     );

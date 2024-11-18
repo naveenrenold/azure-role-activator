@@ -39,46 +39,52 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     //get token
     const authResponse = await getTokenInteractive(scopes, pca);    
     accessToken = authResponse.accessToken;
-    console.log(authResponse.accessToken)
+    console.log(accessToken)
     //create graph client
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	  
-    let roleAssignmentScheduleRequests  = (await axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
+    let roleAssignmentScheduleResponse  = (await axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
           headers : {
-            Authorization : `Bearer ${authResponse.accessToken}`
+            Authorization : `Bearer ${accessToken}`
           }
-    })).data.value;    
-    console.log(roleAssignmentScheduleRequests);        
-    var graphData = roleAssignmentScheduleRequests;
-
-    var request :unifiedRoleAssignmentScheduleRequest = {
-      action : "selfActivate",
-      principalId : graphData[0].principalId,
-      roleDefinitionId : graphData[0].roleDefinition.id,
-      directoryScopeId : '/',
-      justification : 'role activate',
-      scheduleInfo : graphData[0].scheduleInfo
-    }
-    
-    let roleActivationRequests = await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
+    }).then((e) => {
+      console.log(e.data.value)
+      win.webContents.send('getPimRoles', e.data.value);
+    })
+    .catch((error) => {
+      console.log(error)
+    }));            
+  };
+  
+  async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
+  {    
+    for(let i = 0 ;i < roles.length; i++)
+    {
+      var request :unifiedRoleAssignmentScheduleRequest = {
+        action : "selfActivate",
+        principalId : roles[0].principalId,
+        roleDefinitionId : roles[0].roleDefinition.id,
+        directoryScopeId : '/',
+        justification : 'role activate',
+        scheduleInfo : roles[0].scheduleInfo
+      }
+      let roleActivationRequests = await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
-            Authorization : `Bearer ${authResponse.accessToken}`,
+            Authorization : `Bearer ${accessToken}`,
             "Content-Type" : "application/json"
           }
     }).then(() =>{
-      console.log('Role activation requests succeeded : ');      
+      console.log(`Role activation requests succeeded for role id : ${roles[i].roleDefinition.id}`);        
     }
     ).catch((error : any) => {        
-     console.log(`Failed :( with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
-    });
-
-    // let role: PIMRoles[] = [
-    // { displayName: 'admin', roleId: 'Contributor'}, ];
-    //console.log('Get Eligible roles api finished :)')   
-    win.webContents.send('getPimRoles', graphData);
-  };
-  
+     console.log(`Failed :( for role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
+     return false;
+    });    
+  }
+  return true;
+  }
+   
 ////functions 
 //Create window
 const createWindow = async() => {
@@ -179,6 +185,7 @@ async function getGraphClient(accessToken : string)
 
 app.whenReady().then(() => {
   ipcMain.on("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId) => { await getEligibleRolesAsync(event ,clientId, tenantId);})     
+  ipcMain.on("activateRoles", async (event : IpcMainInvokeEvent , roles : PIMRoles[]) => { await activateRolesAsync(event ,roles);})     
    createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

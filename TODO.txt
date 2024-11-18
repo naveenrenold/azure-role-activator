@@ -50,5 +50,21 @@ roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()
  1. Add activate button
  2. check activate api working
  3. make flow to activate
-15/11
-1.
+
+18/11
+0. checkbox logic - done
+1. Make the flow from react to electron for activate 
+2. Make function to auth and return success 
+
+1.1 Right now need to check why geteligible roles is failing
+1.2 check why checkbox dont update when value is updated
+
+
+Less important :
+1. Loading spinner
+2. UI formatting
+3. Cache based Loading
+4.Caching client id and role ids
+
+19/11:
+1.  Activate api fix

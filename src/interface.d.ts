@@ -9,13 +9,30 @@ declare global{
         electronAPI : IElectronAPI
     }
 }
-export interface roleDefinition{
-    displayName : string,
-    id : string
+export interface requestSchedule{
+    expiration? : expirationPattern,
+    recurrence? : any,
+    startDateTime? : any
    }
-export interface PIMRoles{
+  
+   export interface expirationPattern{
+    duration? : any,
+    endDateTime? : any,
+    type? : string
+   }
+   export interface roleDefinition{
+    displayName : string,
+    id : string,    
+   }
+   export interface PIMRoles{
     roleDefinition : roleDefinition,
-    scheduleInfo? : any,
-    principalId? : string,
-    checked? : boolean
-}
+    scheduleInfo? : scheduleInfo,
+    principalId : string,
+    checked : boolean = false
+   }
+
+   export interface scheduleInfo {
+    startDateTime : string,
+      recurrence? : any,
+      expiration : expirationPattern
+   }

@@ -21,23 +21,55 @@
 
 
  {
-   id: '2ad1d71a-3f5b-4bb9-8bfa-cb34091aa9aa',
-   principalId: '4e98736c-8fa1-447b-9110-a1bc930db1d8',
-   roleDefinitionId: '62e90394-69f5-4237-9190-012177145e10',
-   directoryScopeId: '/',
-   appScopeId: null,
-   createdUsing: '2ad1d71a-3f5b-4bb9-8bfa-cb34091aa9aa',
-   createdDateTime: '2024-11-11T07:32:37.117Z',
-   modifiedDateTime: '0001-01-01T08:00:00Z',
-   status: 'Provisioned',
-   memberType: 'Direct',
-   scheduleInfo: {
-     startDateTime: '2024-11-11T07:32:37.117Z',
-     recurrence: null,
-     expiration: { type: 'noExpiration', endDateTime: null, duration: null }
-   }
- }
-
+            "id": "28c66b02-2820-4854-9343-b302b03f0b90",
+            "principalId": "48ff067f-72e7-4d2d-a205-bf50923d1fcd",
+            "roleDefinitionId": "cf1c38e5-3621-4004-a7cb-879624dced7c",
+            "directoryScopeId": "/",
+            "appScopeId": null,
+            "createdUsing": "28c66b02-2820-4854-9343-b302b03f0b90",
+            "createdDateTime": "2024-09-09T14:25:55.277Z",
+            "modifiedDateTime": "0001-01-01T08:00:00Z",
+            "status": "Provisioned",
+            "memberType": "Direct",
+            "scheduleInfo": {
+                "startDateTime": "2024-09-09T14:25:55.277Z",
+                "recurrence": null,
+                "expiration": {
+                    "type": "afterDateTime",
+                    "endDateTime": "2025-09-09T14:25:13.767Z",
+                    "duration": null
+                }
+            },
+            "roleDefinition": {
+                "id": "cf1c38e5-3621-4004-a7cb-879624dced7c",
+                "description": "",
+                "displayName": "Application Developer",
+                "isBuiltIn": true,
+                "isEnabled": true,
+                "templateId": "cf1c38e5-3621-4004-a7cb-879624dced7c",
+                "version": null,
+                "resourceScopes": [],
+                "rolePermissions": []
+            }
+        }
+------------------------------------------------------------------------
+{
+"action" : "selfActivate",
+"principalId" : "48ff067f-72e7-4d2d-a205-bf50923d1fcd",
+"roleDefinitionId" : "cf1c38e5-3621-4004-a7cb-879624dced7c",
+"directoryScopeId" : "/",
+"justification" : "role activate",
+"scheduleInfo" : {
+"startDateTime": "2024-09-09T14:25:55.277Z",
+                "recurrence": null,
+                "expiration": {
+                    "type": "afterDateTime",
+                    "endDateTime": "2025-09-09T14:25:13.767Z",
+                    "duration": null
+                }
+}
+}
+------------------------------------------------------------------------
 roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()
 
  12/11:
@@ -61,10 +93,21 @@ roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()
 
 
 Less important :
+
+
+19/11:
+1.  Activate api fix 
+2. figure out why get api fails - object mapping - success
+3. Next need to add principle id 
+
+
+To do:
 1. Loading spinner
 2. UI formatting
 3. Cache based Loading
 4.Caching client id and role ids
+5. Show more info 
+6. Let users set time?
 
-19/11:
-1.  Activate api fix
+Very important :
+1. You made for entra id but need for azure resources

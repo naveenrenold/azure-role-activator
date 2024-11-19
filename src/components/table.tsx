@@ -11,7 +11,8 @@ function Table()
             id : 'PlaceHolder 1',
             displayName : 'Admin Role',            
           },
-          checked : true
+          checked : true,
+          principalId : "Placeholder 1"
         },
         {
           roleDefinition : 
@@ -19,7 +20,8 @@ function Table()
             id : 'PlaceHolder 2',
             displayName : 'Contibutor Role'
           },
-          checked : false
+          checked : false,
+          principalId : "Placeholder 2"
         }
     ];
     let [graphApiData, updateGraphApiData] = useState(initialGraphApiData); 
@@ -77,6 +79,7 @@ function Table()
             <table border={1}>
         <tbody>
         <tr>
+        {/* <th>PrincipleId</th> */}
         <th>RoleId</th>
         <th>RoleName</th>
         <th>Activate</th>
@@ -85,10 +88,11 @@ function Table()
         graphApiData.map((value,i) => {
           return(
 <tr key={i}>
+  {/* <td>{value.principalId}</td> */}
   <td>{value.roleDefinition?.id}</td>
   <td>{value.roleDefinition?.displayName}</td>
   <td>
-    <input type ='checkbox' title = 'table-checkbox' value={value.roleDefinition.id} checked = {value.checked} onChange = { () =>checkBoxChecked(value.roleDefinition.id)}></input>
+    <input type ='checkbox' title = 'table-checkbox' checked = {value.checked} onChange = { () =>checkBoxChecked(value.roleDefinition.id)}></input>
   </td>
 </tr>
           )          

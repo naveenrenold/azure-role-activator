@@ -10,6 +10,7 @@ import {
 } from "@azure/msal-node";
 import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
 import axios from "axios";
+import {PIMRoles, scheduleInfo} from './src/interface';
 
 ////Constants declare
 var win : BrowserWindow;
@@ -44,13 +45,13 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	  
-    axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition,scheduleInfo', {
+    axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
           headers : {
             Authorization : `Bearer ${accessToken}`
           }
     }).then((e) => {
       console.log(e.data.value)
-      console.log(e.data.value[0].scheduleInfo.expiration)
+      //console.log(e.data.value[0].scheduleInfo.expiration)
       win.webContents.send('getPimRoles', e.data.value);
     })
     .catch((error) => {
@@ -68,7 +69,13 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
         roleDefinitionId : roles[0].roleDefinition.id,
         directoryScopeId : '/',
         justification : 'role activate',
-        scheduleInfo : roles[0].scheduleInfo
+        scheduleInfo :  {
+          startDateTime : new Date().toISOString(),
+          expiration : {
+          type : "AfterDuration",
+          duration : "PT5M"
+          }          
+        } 
       }
       await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
@@ -210,36 +217,11 @@ app.on("window-all-closed", () => {
   directoryScopeId : string,
   appScopeId? : string,
   justification : string,
-  scheduleInfo : any,
+  scheduleInfo? : scheduleInfo,
   ticketInfo? : any
  }
 
- export interface requestSchedule{
-  expiration? : expirationPattern,
-  recurrence? : any,
-  startDateTime? : any
- }
-
- export interface expirationPattern{
-  duration? : any,
-  endDateTime? : any,
-  type? : string
- }
- export interface roleDefinition{
-  displayName : string,
-  id : string
- }
- export interface PIMRoles{
-  roleDefinition : roleDefinition,
-  scheduleInfo : any,
-  principalId : string
- }
+ 
  export interface roleAssignmentScheduleResponse{
   value : PIMRoles[];
- }
-
- export interface scheduleInfo {
-  startDateTime : any,
-	recurrence : any,
-	expiration : any
  }

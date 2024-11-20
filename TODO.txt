@@ -111,3 +111,4 @@ To do:
 
 Very important :
 1. You made for entra id but need for azure resources
+2. Use management.azure.com

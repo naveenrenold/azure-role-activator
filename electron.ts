@@ -14,7 +14,8 @@ import {PIMRoles, scheduleInfo} from './src/interface';
 
 ////Constants declare
 var win : BrowserWindow;
-const scopes = ["RoleManagement.ReadWrite.Directory"];
+const armScopes = ["https://management.azure.com/user_impersonation"];
+const scopes = ["https://graph.microsoft.com/RoleManagement.ReadWrite.Directory"];
 const redirectUri = "http://localhost:3000/table";
 const cryptoProvider = new CryptoProvider();
 const pkceCodes = {
@@ -40,11 +41,24 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     //get token
     const authResponse = await getTokenInteractive(scopes, pca);    
     accessToken = authResponse.accessToken;
-    console.log(accessToken)
+    console.log(accessToken)    
     //create graph client
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
-	  
+	     
+    //ARM api call
+    axios.get<any>('', {
+      headers : {
+        Authorization : `Bearer ${accessToken}`
+      }
+    }).then((e) => {
+      console.log(e.data.value)      
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+
+    // graph api call
     axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
           headers : {
             Authorization : `Bearer ${accessToken}`

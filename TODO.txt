@@ -110,5 +110,12 @@ To do:
 6. Let users set time?
 
 Very important :
-1. You made for entra id but need for azure resources
+1. You made for entra id but need for azure resources - need to add
 2. Use management.azure.com
+
+15/12/24
+add both graph api and azure resources
+
+16/12/24
+1. Now arm api need to form proper get request and send data to ui
+2. Form activate request for arm api

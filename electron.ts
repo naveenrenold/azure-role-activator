@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent} from "electron";
 import url from 'node:url';
 import path from 'node:path';
-import { PublicClientApplication } from "@azure/msal-node";
+import { AccountInfo, InteractiveRequest, PublicClientApplication, SilentFlowRequest } from "@azure/msal-node";
 import {
   AuthenticationResult,
   AuthorizationUrlRequest,
@@ -14,8 +14,8 @@ import {PIMRoles, scheduleInfo} from './src/interface';
 
 ////Constants declare
 var win : BrowserWindow;
+const graphScopes = ["https://graph.microsoft.com/RoleManagement.ReadWrite.Directory"];
 const armScopes = ["https://management.azure.com/user_impersonation"];
-const scopes = ["https://graph.microsoft.com/RoleManagement.ReadWrite.Directory"];
 const redirectUri = "http://localhost:3000/table";
 const cryptoProvider = new CryptoProvider();
 const pkceCodes = {
@@ -23,7 +23,8 @@ const pkceCodes = {
   verifier: "",
   challenge: ""
 }
-let accessToken = '';
+let graphAccessToken = '';
+let armAccessToken = '';
 
 ////Main event
 async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string ) : Promise<void>
@@ -39,29 +40,38 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     const pca = new PublicClientApplication(MSAL_CONFIG);
 
     //get token
-    const authResponse = await getTokenInteractive(scopes, pca);    
-    accessToken = authResponse.accessToken;
-    console.log(accessToken)    
+    const authResponse = await getTokenInteractive(armScopes, pca);    
+    armAccessToken = authResponse.accessToken;
+    console.log("Interactive token: \n" + armAccessToken)
+
+    var silentflowRequest : SilentFlowRequest =  {
+      account : authResponse.account as AccountInfo,
+      scopes : graphScopes
+   };
+    const graphTokenResponse = await pca.acquireTokenSilent(silentflowRequest);
+    graphAccessToken = graphTokenResponse.accessToken;
+    console.log("SilentFlow token:\n " + graphTokenResponse.accessToken)
     //create graph client
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	     
     //ARM api call
-    axios.get<any>('', {
+    axios.get<any>('https://management.azure.com/subscriptions/dd249ddc-44d0-41a8-b0b3-925deb35f39f/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=atScope()', {
       headers : {
-        Authorization : `Bearer ${accessToken}`
+        Authorization : `Bearer ${armAccessToken}`
       }
     }).then((e) => {
       console.log(e.data.value)      
     })
     .catch((error) => {
       console.log(error)
+      
     });
 
     // graph api call
     axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
           headers : {
-            Authorization : `Bearer ${accessToken}`
+            Authorization : `Bearer ${graphAccessToken}`
           }
     }).then((e) => {
       console.log(e.data.value)
@@ -93,7 +103,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
       }
       await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
-            Authorization : `Bearer ${accessToken}`,
+            Authorization : `Bearer ${graphAccessToken}`,
             "Content-Type" : "application/json"
           }
     }).then(() =>{

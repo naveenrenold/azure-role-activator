@@ -1,7 +1,7 @@
 {
   "name": "azure-role-activater",
   "version": "1.0.0",
-  "description": "Used to activate your assigned Priviledged Role Management roles and add your ip address to azure keyvault and storage accounts",
+  "description": "Used to activate your assigned Priviledged Role Management roles",
   "main": "./build/electron.js",
   "homepage": "./",
   "build": {

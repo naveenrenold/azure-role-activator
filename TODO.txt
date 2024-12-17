@@ -119,3 +119,8 @@ add both graph api and azure resources
 16/12/24
 1. Now arm api need to form proper get request and send data to ui
 2. Form activate request for arm api
+3. For now comment the graph api and focus on ARM api
+    What is format of arm api?
+    How to get the data and send to ui
+    Should i split ui
+

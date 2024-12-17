@@ -36,3 +36,11 @@ export interface requestSchedule{
       recurrence? : any,
       expiration : expirationPattern
    }
+
+   export interface armRoles{
+    displayName : string,
+    roleEligibilityScheduleId : string,
+    scope : string,
+    roleDefinitionId : string,
+    principalId : string
+   }

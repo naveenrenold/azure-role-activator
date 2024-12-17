@@ -10,7 +10,7 @@ import {
 } from "@azure/msal-node";
 import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
 import axios from "axios";
-import {PIMRoles, scheduleInfo} from './src/interface';
+import {armRoles, PIMRoles, scheduleInfo} from './src/interface';
 
 ////Constants declare
 var win : BrowserWindow;
@@ -56,32 +56,44 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
 	     
     //ARM api call
-    axios.get<any>('https://management.azure.com/subscriptions/dd249ddc-44d0-41a8-b0b3-925deb35f39f/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=atScope()', {
+    axios.get<any>('https://management.azure.com/subscriptions/dd249ddc-44d0-41a8-b0b3-925deb35f39f/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()', {
       headers : {
         Authorization : `Bearer ${armAccessToken}`
       }
     }).then((e) => {
-      console.log(e.data.value)      
-    })
+      console.log(e.data.value)
+      let result : armRoles[] = e.data.value.map(
+        (role : any) : armRoles =>  {
+          return{
+          displayName : role.properties.expandedProperties.roleDefinition.displayName,
+          roleDefinitionId :  role.properties.roleDefinitionId,
+          scope : role.properties.scope,
+          roleEligibilityScheduleId : role.properties.roleEligibilityScheduleId,
+          principalId : role.properties.principalId
+          };
+        }
+      )
+      console.log(result);
+    })    
     .catch((error) => {
-      console.log(error)
-      
+      console.log(error)      
     });
 
     // graph api call
-    axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
-          headers : {
-            Authorization : `Bearer ${graphAccessToken}`
-          }
-    }).then((e) => {
-      console.log(e.data.value)
-      //console.log(e.data.value[0].scheduleInfo.expiration)
-      win.webContents.send('getPimRoles', e.data.value);
-    })
-    .catch((error) => {
-      console.log(error)
-    });            
+  //   axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
+  //         headers : {
+  //           Authorization : `Bearer ${graphAccessToken}`
+  //         }
+  //   }).then((e) => {
+  //     console.log(e.data.value)
+  //     //console.log(e.data.value[0].scheduleInfo.expiration)
+  //     win.webContents.send('getPimRoles', e.data.value);
+  //   })
+  //   .catch((error) => {
+  //     console.log(error)
+  //   });            
   };
+
   
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
   {    

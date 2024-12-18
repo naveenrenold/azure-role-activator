@@ -35,12 +35,13 @@ function Table()
        let tempGraphData = graphApiData.map((role) => {
         if(role.roleDefinition.id === id)
         {
-          return {
-            roleDefinition : role.roleDefinition,
-            checked : !role.checked,
-            principalId : role.principalId,
-            scheduleInfo : role.scheduleInfo
-          }
+          role.checked = !role.checked;
+          // return {
+          //   roleDefinition : role.roleDefinition,
+          //   checked : !role.checked,
+          //   principalId : role.principalId,
+          //   scheduleInfo : role.scheduleInfo
+          // }
         }
         return role;
        })

@@ -8,7 +8,7 @@ import {
   Configuration,
   CryptoProvider,
 } from "@azure/msal-node";
-import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
+//import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
 import axios from "axios";
 import {armRoles, PIMRoles, scheduleInfo} from './src/interface';
 
@@ -42,7 +42,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     //get token
     const authResponse = await getTokenInteractive(armScopes, pca);    
     armAccessToken = authResponse.accessToken;
-    console.log("Interactive token: \n" + armAccessToken)
+    console.log("\nInteractive token: \n" + armAccessToken)
 
     var silentflowRequest : SilentFlowRequest =  {
       account : authResponse.account as AccountInfo,
@@ -50,7 +50,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
    };
     const graphTokenResponse = await pca.acquireTokenSilent(silentflowRequest);
     graphAccessToken = graphTokenResponse.accessToken;
-    console.log("SilentFlow token:\n " + graphTokenResponse.accessToken)
+    console.log("\nSilentFlow token:\n " + graphTokenResponse.accessToken)
     //create graph client
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
@@ -63,17 +63,20 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     }).then((e) => {
       console.log(e.data.value)
       let result : armRoles[] = e.data.value.map(
-        (role : any) : armRoles =>  {
-          return{
-          displayName : role.properties.expandedProperties.roleDefinition.displayName,
-          roleDefinitionId :  role.properties.roleDefinitionId,
+        (role : any) : PIMRoles =>  {
+          return {
+            roleDefinition : {
+              displayName : role.properties.expandedProperties.roleDefinition.displayName,
+              id : role.properties.roleDefinitionId
+            },                                
           scope : role.properties.scope,
           roleEligibilityScheduleId : role.properties.roleEligibilityScheduleId,
-          principalId : role.properties.principalId
+          principalId : role.properties.principalId          
           };
         }
-      )
+      )      
       console.log(result);
+      win.webContents.send('getPimRoles', result);
     })    
     .catch((error) => {
       console.log(error)      
@@ -94,7 +97,6 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
   //   });            
   };
 
-  
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
   {    
     for(let i = 0 ;i < roles.length; i++)
@@ -115,7 +117,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
       }
       await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
-            Authorization : `Bearer ${graphAccessToken}`,
+            Authorization : `Bearer ${armAccessToken}`,
             "Content-Type" : "application/json"
           }
     }).then(() =>{
@@ -128,6 +130,40 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
   }
   return true;
   }
+  
+  // async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
+  // {    
+  //   for(let i = 0 ;i < roles.length; i++)
+  //   {
+  //     var request :unifiedRoleAssignmentScheduleRequest = {
+  //       action : "selfActivate",
+  //       principalId : roles[0].principalId,
+  //       roleDefinitionId : roles[0].roleDefinition.id,
+  //       directoryScopeId : '/',
+  //       justification : 'role activate',
+  //       scheduleInfo :  {
+  //         startDateTime : new Date().toISOString(),
+  //         expiration : {
+  //         type : "AfterDuration",
+  //         duration : "PT5M"
+  //         }          
+  //       } 
+  //     }
+  //     await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
+  //         headers : {
+  //           Authorization : `Bearer ${graphAccessToken}`,
+  //           "Content-Type" : "application/json"
+  //         }
+  //   }).then(() =>{
+  //     console.log(`Role activation requests succeeded for role id : ${roles[i].roleDefinition.id}`);        
+  //   }
+  //   ).catch((error : any) => {        
+  //    console.log(`Failed :( for role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
+  //    return false;
+  //   });    
+  // }
+  // return true;
+  // }
    
 ////functions 
 //Create window
@@ -212,16 +248,16 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 
 
 
-async function getGraphClient(accessToken : string)
-{   
-  return Client.init(
-    {
-      authProvider: (done : AuthProviderCallback) => {
-        done(null, accessToken);
-    }
-    }
-    );
-}
+// async function getGraphClient(accessToken : string)
+// {   
+//   return Client.init(
+//     {
+//       authProvider: (done : AuthProviderCallback) => {
+//         done(null, accessToken);
+//     }
+//     }
+//     );
+// }
 
 ////Events
 

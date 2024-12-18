@@ -27,8 +27,10 @@ export interface requestSchedule{
    export interface PIMRoles{
     roleDefinition : roleDefinition,
     scheduleInfo? : scheduleInfo,
-    principalId : string,
-    checked : boolean = false
+    principalId : string,    
+    checked? : boolean = false,
+    roleEligibilityScheduleId? : string,
+    scope? : string
    }
 
    export interface scheduleInfo {

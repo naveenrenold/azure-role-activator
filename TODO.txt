@@ -124,3 +124,8 @@ add both graph api and azure resources
     How to get the data and send to ui
     Should i split ui
 
+17/12/24
+1.  FOrmatted api
+2. now need to activate pim
+3. PIM api need to check from local
+4. After activating need to split

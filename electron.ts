@@ -27,7 +27,7 @@ let graphAccessToken = '';
 let armAccessToken = '';
 
 ////Main event
-async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string ) : Promise<void>
+async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string, subscription? : string ) : Promise<void>
   {    
     //log and create objects
     //console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
@@ -54,15 +54,45 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     //create graph client
     // var client = await getGraphClient(authResponse.accessToken);
     // let roleAssignmentScheduleRequestsapi = await client.api('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules').get();    
-	     
+    let pimRoles : PIMRoles[] = []
+    
+    // graph api call
+    var response = await getGraphRoles();
+    if(response.isSuccess)
+    {
+      console.log('\nGraph api succeeded\n');
+      console.log(response.pimRoles);
+      pimRoles = pimRoles.concat(response.pimRoles);
+    }
     //ARM api call
-    axios.get<any>('https://management.azure.com/subscriptions/dd249ddc-44d0-41a8-b0b3-925deb35f39f/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()', {
+    if(subscription != null)
+    {
+      response = await getArmRoles(subscription);      
+      if(response.isSuccess)
+      {
+        console.log('\nArm api succeeded\n');
+        console.log(response.pimRoles);
+        pimRoles = pimRoles.concat(response.pimRoles);
+      }
+    }
+    console.log('\nPIMRoles Output:\n') 
+    console.log(pimRoles)              
+    win.webContents.send('getPimRoles', pimRoles);       
+  };
+
+  async function getArmRoles(subscription : string) : Promise<apiResponse>
+  {
+    var apiResponse : apiResponse = {
+      isSuccess : false,
+      pimRoles : []
+    }
+    await axios.get<any>(`https://management.azure.com/subscriptions/${subscription}/providers/Microsoft.Authorization/roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()`, {
       headers : {
         Authorization : `Bearer ${armAccessToken}`
       }
     }).then((e) => {
-      console.log(e.data.value)
-      let result : armRoles[] = e.data.value.map(
+      //console.log(e.data.value)
+      let result : PIMRoles[] = e.data.value.map(
         (role : any) : PIMRoles =>  {
           return {
             roleDefinition : {
@@ -75,27 +105,45 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
           };
         }
       )      
-      console.log(result);
-      win.webContents.send('getPimRoles', result);
+      //console.log(result);
+      apiResponse = {
+        isSuccess : true,
+        pimRoles : result
+      } 
+      //win.webContents.send('getPimRoles', result);
     })    
     .catch((error) => {
-      console.log(error)      
+      console.log(error)          
     });
+    console.log('\nARM api output:\n') 
+    console.log(apiResponse.pimRoles) 
+    return apiResponse;
+  }
 
-    // graph api call
-  //   axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
-  //         headers : {
-  //           Authorization : `Bearer ${graphAccessToken}`
-  //         }
-  //   }).then((e) => {
-  //     console.log(e.data.value)
-  //     //console.log(e.data.value[0].scheduleInfo.expiration)
-  //     win.webContents.send('getPimRoles', e.data.value);
-  //   })
-  //   .catch((error) => {
-  //     console.log(error)
-  //   });            
-  };
+  async function getGraphRoles() : Promise<apiResponse>
+  {
+    var apiResponse : apiResponse = {
+      isSuccess : false,
+      pimRoles : []
+    }
+    await axios.get<roleAssignmentScheduleResponse>('https://graph.microsoft.com/v1.0/roleManagement/directory/roleEligibilitySchedules?$expand=roleDefinition', {
+          headers : {
+            Authorization : `Bearer ${graphAccessToken}`
+          }
+    }).then((e) => {
+      //console.log(e.data.value)
+      apiResponse = {
+        isSuccess : true,
+        pimRoles : e.data.value
+      }      
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+    console.log('\nGraph api output\n:');
+    console.log(apiResponse.pimRoles) 
+    return apiResponse;
+  }
 
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
   {    
@@ -264,7 +312,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 //App start
 
 app.whenReady().then(() => {
-  ipcMain.on("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId) => { await getEligibleRolesAsync(event ,clientId, tenantId);})     
+  ipcMain.on("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId, subscription) => { await getEligibleRolesAsync(event ,clientId, tenantId, subscription);})     
   ipcMain.on("activateRoles", async (event : IpcMainInvokeEvent , roles : PIMRoles[]) => { await activateRolesAsync(event ,roles);})     
    createWindow();  
   app.on("activate", () => {
@@ -296,4 +344,9 @@ app.on("window-all-closed", () => {
  
  export interface roleAssignmentScheduleResponse{
   value : PIMRoles[];
+ }
+
+ export interface apiResponse{
+  isSuccess : boolean;
+  pimRoles : PIMRoles[];
  }

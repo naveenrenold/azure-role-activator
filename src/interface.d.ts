@@ -1,5 +1,5 @@
 export interface IElectronAPI{
-    getEligibleRoles : (clientId : string , tenantId : string) => Promise<PIMRoles[]>
+    getEligibleRoles : (clientId : string , tenantId : string, subscription? : string) => Promise<PIMRoles[]>
     getPIMRoles : (callback : any) => any
     activateRoles : (roles : PIMRoles[]) => boolean
 }

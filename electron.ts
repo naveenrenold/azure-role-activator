@@ -10,7 +10,7 @@ import {
 } from "@azure/msal-node";
 //import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
 import axios from "axios";
-import {armRoles, PIMRoles, scheduleInfo} from './src/interface';
+import { PIMRoles, scheduleInfo} from './src/interface';
 
 ////Constants declare
 var win : BrowserWindow;
@@ -147,7 +147,27 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
 
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
   {    
-    for(let i = 0 ;i < roles.length; i++)
+    var armRoles = roles.filter((e) => {
+      return e.scope != null
+    })
+    var graphRoles = roles.filter((e) => {
+      return e.scope == null
+    })    
+    var response = await activateGraphRoles(graphRoles);
+    if(response.isSuccess)
+    {
+
+    }
+  return true;
+  }
+  
+async function activateGraphRoles(roles : PIMRoles[]) : Promise<apiResponse>
+{  
+  var apiResponse : apiResponse = {
+    isSuccess : false,
+    pimRoles : []
+  }    
+  for(let i = 0 ;i < roles.length; i++)
     {
       var request :unifiedRoleAssignmentScheduleRequest = {
         action : "selfActivate",
@@ -169,16 +189,55 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
             "Content-Type" : "application/json"
           }
     }).then(() =>{
-      console.log(`Role activation requests succeeded for role id : ${roles[i].roleDefinition.id}`);        
+      console.log(`Graph Role activation requests succeeded for role id : ${roles[i].roleDefinition.id}`);      
     }
     ).catch((error : any) => {        
-     console.log(`Failed :( for role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
-     return false;
-    });    
+     console.log(`Failed :( for Graph role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
+     apiResponse.pimRoles.push(roles[i]);
+     apiResponse.isSuccess = false;
+    });        
   }
-  return true;
+  return apiResponse;
+}
+
+async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
+{  
+  var apiResponse : apiResponse = {
+    isSuccess : false,
+    pimRoles : []
+  }    
+  for(let i = 0 ;i < roles.length; i++)
+    {
+      var request :unifiedRoleAssignmentScheduleRequest = {
+        action : "selfActivate",
+        principalId : roles[0].principalId,
+        roleDefinitionId : roles[0].roleDefinition.id,
+        directoryScopeId : '/',
+        justification : 'role activate',
+        scheduleInfo :  {
+          startDateTime : new Date().toISOString(),
+          expiration : {
+          type : "AfterDuration",
+          duration : "PT5M"
+          }          
+        } 
+      }
+      await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
+          headers : {
+            Authorization : `Bearer ${armAccessToken}`,
+            "Content-Type" : "application/json"
+          }
+    }).then(() =>{
+      console.log(`Graph Role activation requests succeeded for role id : ${roles[i].roleDefinition.id}`);      
+    }
+    ).catch((error : any) => {        
+     console.log(`Failed :( for Graph role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
+     apiResponse.pimRoles.push(roles[i]);
+     apiResponse.isSuccess = false;
+    });        
   }
-  
+  return apiResponse;
+}
   // async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
   // {    
   //   for(let i = 0 ;i < roles.length; i++)

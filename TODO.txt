@@ -129,3 +129,8 @@ add both graph api and azure resources
 2. now need to activate pim
 3. PIM api need to check from local
 4. After activating need to split
+
+18/12/24
+1. Need to add back to login page - future
+2. Need to check for other services
+3. Need to add api for activating -priority

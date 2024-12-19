@@ -30,19 +30,12 @@ export interface requestSchedule{
     principalId : string,    
     checked? : boolean = false,
     roleEligibilityScheduleId? : string,
-    scope? : string
+    scope? : string,
+    isARMRole? : string = false
    }
 
    export interface scheduleInfo {
     startDateTime : string,
       recurrence? : any,
       expiration : expirationPattern
-   }
-
-   export interface armRoles{
-    displayName : string,
-    roleEligibilityScheduleId : string,
-    scope : string,
-    roleDefinitionId : string,
-    principalId : string
    }

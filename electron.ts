@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent} from "electron";
 import url from 'node:url';
 import path from 'node:path';
-import { AccountInfo, InteractiveRequest, PublicClientApplication, SilentFlowRequest } from "@azure/msal-node";
+import { AccountInfo, PublicClientApplication, SilentFlowRequest } from "@azure/msal-node";
 import {
   AuthenticationResult,
   AuthorizationUrlRequest,
@@ -146,7 +146,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     return apiResponse;
   }
 
-  async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<apiResponse>
+  async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<void>
   {
     var response :apiResponse = {        
       isSuccess : false,
@@ -154,9 +154,9 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     };
     var armRoles : PIMRoles[] = [];
     var graphRoles : PIMRoles[] = [];
-    if(!roles || roles.length == 0)   
+    if(!roles || roles.length === 0)   
     {
-       return response;
+      win.webContents.send('getPIMActivationResponse', response);
     }
     roles.forEach(
       (e) =>{
@@ -176,12 +176,12 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
     //   return e.scope == null
     // })
     
-    if(armRoles.length != 0)
+    if(armRoles.length !== 0)
     {
       response = await activateArmRoles(armRoles);
     }
     
-    if(graphRoles.length != 0)
+    if(graphRoles.length !== 0)
     {
       var graphresponse = await activateGraphRoles(graphRoles);
       response =  {
@@ -189,7 +189,8 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
         pimRoles : response.pimRoles.concat(graphresponse.pimRoles)
       }
     }
-    return response;    
+    console.log('Sending to table: ' + response.isSuccess + response.pimRoles.length)
+    win.webContents.send('getPIMActivationResponse', response);
   }
   
 async function activateGraphRoles(roles : PIMRoles[]) : Promise<apiResponse>
@@ -216,7 +217,7 @@ async function activateGraphRoles(roles : PIMRoles[]) : Promise<apiResponse>
       }
       await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
           headers : {
-            Authorization : `Bearer ${armAccessToken}`,
+            Authorization : `Bearer ${graphAccessToken}`,
             "Content-Type" : "application/json"
           }
     }).then(() =>{
@@ -239,22 +240,7 @@ async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
     pimRoles : []
   }    
   for(let i = 0 ;i < roles.length; i++)
-    {
-      // var request  = {
-      //   action : "selfActivate",
-      //   principalId : roles[i].principalId,
-      //   roleDefinitionId : roles[i].roleDefinition.id,
-      //   directoryScopeId : '/',
-      //   justification : 'role activate',
-      //   scheduleInfo :  {
-      //     startDateTime : new Date().toISOString(),
-      //     expiration : {
-      //     type : "AfterDuration",
-      //     duration : "PT5M"
-      //     }          
-      //   } 
-      // }
-
+    {      
     var request = { 
         properties: { 
         principalId : roles[i].principalId, 
@@ -272,8 +258,8 @@ async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
         justification : "activate for test"
       }	
       }
-
-      await axios.post(`https://management.azure.com/providers/Microsoft.Subscription/subscriptions/${subcription}/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/${uuidv4()}?api-version=2020-10-01`, request, {
+      console.log(`ARM api call \n https://management.azure.com/providers/Microsoft.Subscription/subscriptions/${subcription}/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/${uuidv4()}?api-version=2020-10-01`)
+      await axios.put(`https://management.azure.com/providers/Microsoft.Subscription/subscriptions/${subcription}/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/${uuidv4()}?api-version=2020-10-01`, request, {
           headers : {
             Authorization : `Bearer ${armAccessToken}`,
             "Content-Type" : "application/json"

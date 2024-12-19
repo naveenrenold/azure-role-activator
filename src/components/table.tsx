@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { PIMRoles } from '../interface';
+import { apiResponse, PIMRoles } from '../interface';
 
 function Table()
 {    
@@ -25,12 +25,19 @@ function Table()
         }
     ];
     let [graphApiData, updateGraphApiData] = useState(initialGraphApiData); 
+    var [apiResponse, updateApiResponse] = useState("Hello");
     window.electronAPI.getPIMRoles((value : PIMRoles[]) =>
     {
         updateGraphApiData(value);        
     }
     );
     
+    window.electronAPI.getPIMActivationResponse((response : apiResponse) =>
+      {
+          updateApiResponse(`API ${response.isSuccess}. ${response.pimRoles.length} roles failed to activate`)
+      }
+      );
+
     function checkBoxChecked(id: string){
        let tempGraphData = graphApiData.map((role) => {
         if(role.roleDefinition.id === id)
@@ -61,6 +68,7 @@ function Table()
     }
     function unCheckBoxes()
     { 
+      updateApiResponse("test");
       let tempGraphData = graphApiData.map((role) => {
         return {
           roleDefinition : role.roleDefinition,
@@ -104,6 +112,9 @@ function Table()
       <div>
       <button onClick={e => activateRoles()}>Activate Roles</button>
       <button onClick={e => unCheckBoxes()}>Reset</button>
+      </div>
+      <div>
+        <input type='text' title = 'apiResponse' value={apiResponse} readOnly></input>
       </div>
         </div>
     );

@@ -2,6 +2,7 @@ export interface IElectronAPI{
     getEligibleRoles : (clientId : string , tenantId : string, subscription? : string) => Promise<PIMRoles[]>
     getPIMRoles : (callback : any) => any
     activateRoles : (roles : PIMRoles[]) => boolean
+    getPIMActivationResponse : (callback : any) => any
 }
 
 declare global{

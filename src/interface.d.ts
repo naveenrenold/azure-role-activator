@@ -39,3 +39,8 @@ export interface requestSchedule{
       recurrence? : any,
       expiration : expirationPattern
    }
+
+   export interface apiResponse{
+    isSuccess : boolean;
+    pimRoles : PIMRoles[];
+   }

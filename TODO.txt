@@ -134,3 +134,21 @@ add both graph api and azure resources
 1. Need to add back to login page - future
 2. Need to check for other services
 3. Need to add api for activating -priority
+---
+{ 
+"properties": { 
+  "principalId": "48ff067f-72e7-4d2d-a205-bf50923d1fcd", 
+  "roleDefinitionId": "/subscriptions/dd249ddc-44d0-41a8-b0b3-925deb35f39f/providers/Microsoft.Authorization/roleDefinitions/fe86443c-f201-4fc4-9d2a-ac61149fbda0", 
+  "requestType": "SelfActivate", 
+  "linkedRoleEligibilityScheduleId": "/subscriptions/dd249ddc-44d0-41a8-b0b3-925deb35f39f/providers/Microsoft.Authorization/roleEligibilitySchedules/4d7fe699-a28d-450a-be7c-4f000c1a9160", 
+  "scheduleInfo": { 
+      "startDateTime": "2024-12-17T23:00:00.91Z", 
+      "expiration": { 
+          "type": "AfterDuration", 
+          "endDateTime": null, 
+          "duration": "PT5M" 
+      } 
+  },
+	"justification": "activate for test"
+}	
+}

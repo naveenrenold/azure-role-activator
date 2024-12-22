@@ -149,7 +149,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<void>
   {
     var response :apiResponse = {        
-      isSuccess : false,
+      isSuccess : true,
       pimRoles : []
     };
     var armRoles : PIMRoles[] = [];
@@ -229,6 +229,11 @@ async function activateGraphRoles(roles : PIMRoles[]) : Promise<apiResponse>
      apiResponse.isSuccess = false;
     });        
   }
+  if(apiResponse.pimRoles.length === 0)
+    {
+      apiResponse.isSuccess = true;
+    }
+    console.log(`Checkpoint graph: ${apiResponse.isSuccess}`)
   return apiResponse;
 }
 
@@ -269,10 +274,14 @@ async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
     }
     ).catch((error : any) => {        
      console.log(`Failed :( for ARM role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
-     apiResponse.pimRoles.push(roles[i]);
-     apiResponse.isSuccess = false;
+     apiResponse.pimRoles.push(roles[i]);     
     });        
   }
+  if(apiResponse.pimRoles.length === 0)
+  {
+    apiResponse.isSuccess = true;    
+  }
+  console.log(`Checkpoint armapi: ${apiResponse.isSuccess}`)
   return apiResponse;
 }
   // async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>

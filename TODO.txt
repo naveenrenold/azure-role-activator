@@ -152,3 +152,14 @@ add both graph api and azure resources
 	"justification": "activate for test"
 }	
 }
+-------------
+22/12/24
+to do later:
+1. Check duplicates in get api 
+2. Enable loading
+3. Cache 
+
+to do now : package
+when packaging it cant find app.css
+
+try to first build and run it

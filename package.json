@@ -10,13 +10,10 @@
     "extends": null,
     "files": [
       "build/**/*",
-      "node_modules/**/*"      
+      "node_modules/**/*"
     ],
     "directories": {
       "buildResources": "public"
-    },
-    "extraMetadata": {
-      "main": "build/electron.js"
     },
     "mac": {
       "target": "dmg"
@@ -66,6 +63,8 @@
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "axios": "^1.7.7",
     "concurrently": "^8.2.2",
+    "electron-progressbar": "^2.2.1",
+    "electron-settings": "^4.0.4",
     "react-router-dom": "^6.27.0",
     "util": "^0.12.5",
     "uuid": "^11.0.3",

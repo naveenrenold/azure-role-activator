@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import {createRoot} from 'react-dom/client';
 import Login from './components/login';
 import Table from './components/table';
 import {Route, Routes, BrowserRouter, HashRouter} from 'react-router-dom';
 
+var routing : ReactElement<Element>;
 if(!process.env.NODE_ENV || process.env.NODE_ENV === 'development')
 {
-const routing = (
+routing = (
   <BrowserRouter>
     <Routes>    
       <Route path='/' Component={Login}/>
@@ -16,7 +17,7 @@ const routing = (
 )
 }
 else{
-  const routing = (
+  routing = (
     <HashRouter>
       <Routes>    
         <Route path='/' Component={Login}/>

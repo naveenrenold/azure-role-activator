@@ -42,13 +42,7 @@ function Table()
        let tempGraphData = graphApiData.map((role) => {
         if(role.roleDefinition.id === id)
         {
-          role.checked = !role.checked;
-          // return {
-          //   roleDefinition : role.roleDefinition,
-          //   checked : !role.checked,
-          //   principalId : role.principalId,
-          //   scheduleInfo : role.scheduleInfo
-          // }
+          role.checked = !role.checked;          
         }
         return role;
        })
@@ -77,9 +71,6 @@ function Table()
           scheduleInfo : role.scheduleInfo
         }      
      })     
-      // graphApiData.forEach((role : PIMRoles) => {
-      //   role.checked = false;
-      // })
       updateGraphApiData(tempGraphData);
     }
 

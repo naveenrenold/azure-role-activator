@@ -163,3 +163,8 @@ to do now : package
 when packaging it cant find app.css
 
 try to first build and run it
+------------
+23/12/24
+1.  Need to first package in properly
+    1. Figure out app.css
+    2. Make Root render    

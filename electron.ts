@@ -262,8 +262,7 @@ async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
         },
         justification : "activate for test"
       }	
-      }
-      console.log(`ARM api call \n https://management.azure.com/providers/Microsoft.Subscription/subscriptions/${subcription}/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/${uuidv4()}?api-version=2020-10-01`)
+      }      
       await axios.put(`https://management.azure.com/providers/Microsoft.Subscription/subscriptions/${subcription}/providers/Microsoft.Authorization/roleAssignmentScheduleRequests/${uuidv4()}?api-version=2020-10-01`, request, {
           headers : {
             Authorization : `Bearer ${armAccessToken}`,
@@ -283,49 +282,16 @@ async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
   }
   console.log(`Checkpoint armapi: ${apiResponse.isSuccess}`)
   return apiResponse;
-}
-  // async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<boolean>
-  // {    
-  //   for(let i = 0 ;i < roles.length; i++)
-  //   {
-  //     var request :unifiedRoleAssignmentScheduleRequest = {
-  //       action : "selfActivate",
-  //       principalId : roles[0].principalId,
-  //       roleDefinitionId : roles[0].roleDefinition.id,
-  //       directoryScopeId : '/',
-  //       justification : 'role activate',
-  //       scheduleInfo :  {
-  //         startDateTime : new Date().toISOString(),
-  //         expiration : {
-  //         type : "AfterDuration",
-  //         duration : "PT5M"
-  //         }          
-  //       } 
-  //     }
-  //     await axios.post('https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignmentScheduleRequests', request, {
-  //         headers : {
-  //           Authorization : `Bearer ${graphAccessToken}`,
-  //           "Content-Type" : "application/json"
-  //         }
-  //   }).then(() =>{
-  //     console.log(`Role activation requests succeeded for role id : ${roles[i].roleDefinition.id}`);        
-  //   }
-  //   ).catch((error : any) => {        
-  //    console.log(`Failed :( for role id : ${roles[i].roleDefinition.id} with status code ${error.statusCode} and message: ${error.message} and api error : ${error}`);
-  //    return false;
-  //   });    
-  // }
-  // return true;
-  // }
+}  
    
-////functions 
+//functions 
 //Create window
 const createWindow = async() => {
   win = new BrowserWindow({
    width: 800,
    height: 600,
    webPreferences: {
-     webSecurity: false,
+     webSecurity: true,
      preload: path.join(__dirname, 'preload.js')  
  }
  }
@@ -341,9 +307,11 @@ const createWindow = async() => {
 
 async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) : Promise<string | null> {
   window.loadURL(navigateUrl);
+  console.log('\nLoaed url');
   return new Promise((resolve,reject)=>{
       window.webContents.on('will-redirect', (event, responseUrl) =>{
           try{              
+            console.log(`\nredirecting to ${event.url}`);
               const parsedUrl = new URL(responseUrl);
               const authCode = parsedUrl.searchParams.get('code');
               resolve(authCode);
@@ -376,27 +344,6 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
     codeVerifier: pkceCodes.verifier
 });
  return authResponse;
-//   var account = (await pca.getAllAccounts())[0];
-//   console.log('account'+account.homeAccountId);
-//   const authResponse = await pca.acquireTokenSilent({    
-//     scopes: scopes,
-//     account: account 
-// }).then((accessTokenResponse) => {
-//   console.log('Silent token');
-//   return accessTokenResponse;  
-// }).catch( async (error) => {
-//   console.log(error);
-//   console.log('Interactive token');
-//   const authResponse =await pca.acquireTokenByCode({
-//     redirectUri: redirectUri,
-//     scopes: scopes,
-//     code: authCode ?? "",
-//     codeVerifier: pkceCodes.verifier
-// });
-//  return authResponse;
-// }
-// )
-// return authResponse;
 }
 
 

@@ -307,10 +307,11 @@ const createWindow = async() => {
 
 async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) : Promise<string | null> {
   window.loadURL(navigateUrl);
-  console.log('\nLoaed url');
+  console.log('\nLoad url');
   return new Promise((resolve,reject)=>{
       window.webContents.on('will-redirect', (event, responseUrl) =>{
-          try{              
+          try{
+                          
             console.log(`\nredirecting to ${event.url}`);
               const parsedUrl = new URL(responseUrl);
               const authCode = parsedUrl.searchParams.get('code');

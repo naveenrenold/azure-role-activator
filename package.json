@@ -38,7 +38,8 @@
     "electron:package:mac": "npm run build && electron-builder -m",
     "electron:package:win": "npm run build && electron-builder -w",
     "electron:package:win:yarn": "yarn electron-builder -w",
-    "electron:package:linux": "npm run build && electron-builder -l"
+    "electron:package:linux": "npm run build && electron-builder -l",
+    "electron:yarn" : "electron build/electron.js"
   },
   "repository": {
     "type": "git",

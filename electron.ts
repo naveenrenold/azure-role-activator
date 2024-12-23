@@ -311,6 +311,14 @@ async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) 
   return new Promise((resolve,reject)=>{
       window.webContents.on('will-redirect', (event, responseUrl) =>{
           try{
+            win.loadURL(app.isPackaged
+              ? url.format({
+                  pathname: path.join(__dirname, "index.html"),  //Load home page from localhost or dist
+                  protocol: "file:",
+                  hash: '/table',
+                  slashes: true,
+                })
+              : "http://localhost:3000/table"); 
                           
             console.log(`\nredirecting to ${event.url}`);
               const parsedUrl = new URL(responseUrl);

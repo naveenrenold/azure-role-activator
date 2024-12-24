@@ -1,4 +1,4 @@
-# Azure PIM Role Activator
+# Azure PIM Role Activator 🔑
 
 * Activating JustinTime(PIM) roles in Azure are time consuming if you are activate multiple roles at once.
 * This desktop application can activate mutiple roles at the same time, with many useful features for people activating roles everyday

@@ -10,8 +10,8 @@ if(!process.env.NODE_ENV || process.env.NODE_ENV === 'development')
 routing = (
   <BrowserRouter>
     <Routes>    
-      <Route path='/' Component={Login}/>
-      <Route path='/table' Component={Table}/>          
+      <Route path='/' Component={ Login }/>
+      <Route path='/table' Component={ Table }/>          
     </Routes>
   </BrowserRouter>
 )
@@ -20,8 +20,8 @@ else{
   routing = (
     <HashRouter>
       <Routes>    
-        <Route path='/' Component={Login}/>
-        <Route path='/table' Component={Table}/>          
+        <Route path='/' Component={ Login }/>
+        <Route path='/table' Component={ Table }/>          
       </Routes>
     </HashRouter>
   ) 

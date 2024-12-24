@@ -175,3 +175,5 @@ how does it still work tho lol
 --------
 
 1. need to find why routing to table is not happening
+--------
+1. Configure another route

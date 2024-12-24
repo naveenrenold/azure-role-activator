@@ -147,7 +147,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
   }
 
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<void>
-  {
+  {        
     var response :apiResponse = {        
       isSuccess : true,
       pimRoles : []
@@ -315,7 +315,7 @@ async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) 
               ? url.format({
                   pathname: path.join(__dirname, "index.html"),  //Load home page from localhost or dist
                   protocol: "file:",
-                  hash: '/table',
+                  hash: 'table',
                   slashes: true,
                 })
               : "http://localhost:3000/table"); 

@@ -30,16 +30,14 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prestart": "tsc -p tsconfig-build.json",
-    "start": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
-    "start-yarn": "conc -k \"yarn dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
+    "prestart": "tsc -p tsconfig-build.json",    
+    "start-npm": "conc -k \"npm run dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
+    "start": "conc -k \"yarn dev\"  \"wait-on http://localhost:3000 && electron public/electron.js\" ",
     "electron-run": "electron public\\electron.js",
-    "react-run": "npm run dev  --prefix ..\\react-ui",
-    "electron:package:mac": "npm run build && electron-builder -m",
-    "electron:package:win": "npm run build && electron-builder -w",
-    "electron:package:win:yarn": "yarn electron-builder -w",
-    "electron:package:linux": "npm run build && electron-builder -l",
-    "electron:yarn" : "electron build/electron.js"
+    "react-run": "yarn run dev  --prefix ..\\react-ui",
+    "electron:package:mac": "yarn run build && electron-builder -m",
+    "electron:package:win": "yarn run build && electron-builder -w",    
+    "electron:package:linux": "yarn run build && electron-builder -l"   
   },
   "repository": {
     "type": "git",

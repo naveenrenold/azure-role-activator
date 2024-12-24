@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent} from "electron";
+import { app, BrowserWindow, ipcMain, IpcMainInvokeEvent, net, protocol} from "electron";
 import url from 'node:url';
 import path from 'node:path';
 import { AccountInfo, PublicClientApplication, SilentFlowRequest } from "@azure/msal-node";
@@ -30,8 +30,7 @@ let armAccessToken = '';
 ////Main event
 async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string, subscription? : string ) : Promise<void>
   {    
-    //log and create objects
-    //console.log(`IPC call from react renderer service: ${event.processId} ;args 1: ${clientId} ;args 2: ${tenantId}`);
+    //create objects    
     const MSAL_CONFIG : Configuration = {
       auth: {
         clientId: clientId,
@@ -75,9 +74,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
         console.log(response.pimRoles);
         pimRoles = pimRoles.concat(response.pimRoles);
       }
-    }
-    console.log('\nPIMRoles Output:\n') 
-    console.log(pimRoles)              
+    }              
     win.webContents.send('getPimRoles', pimRoles);       
   };
 
@@ -91,8 +88,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
       headers : {
         Authorization : `Bearer ${armAccessToken}`
       }
-    }).then((e) => {
-      //console.log(e.data.value)
+    }).then((e) => {      
       let result : PIMRoles[] = e.data.value.map(
         (role : any) : PIMRoles =>  {
           return {
@@ -105,13 +101,11 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
           principalId : role.properties.principalId          
           };
         }
-      )      
-      //console.log(result);
+      )            
       apiResponse = {
         isSuccess : true,
         pimRoles : result
-      } 
-      //win.webContents.send('getPimRoles', result);
+      }       
     })    
     .catch((error) => {
       console.log(error)          
@@ -131,8 +125,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
           headers : {
             Authorization : `Bearer ${graphAccessToken}`
           }
-    }).then((e) => {
-      //console.log(e.data.value)
+    }).then((e) => {      
       apiResponse = {
         isSuccess : true,
         pimRoles : e.data.value
@@ -306,8 +299,7 @@ const createWindow = async() => {
 };
 
 async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) : Promise<string | null> {
-  window.loadURL(navigateUrl);
-  console.log('\nLoad url');
+  window.loadURL(navigateUrl);  
   return new Promise((resolve,reject)=>{
       window.webContents.on('will-redirect', (event, responseUrl) =>{
           try{
@@ -319,8 +311,7 @@ async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) 
                   slashes: true,
                 })
               : "http://localhost:3000/table"); 
-                          
-            console.log(`\nredirecting to ${event.url}`);
+                                      
               const parsedUrl = new URL(responseUrl);
               const authCode = parsedUrl.searchParams.get('code');
               resolve(authCode);
@@ -369,9 +360,12 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 // }
 
 ////Events
-
-//App start
-
+//Before app ready
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'http', privileges: { bypassCSP: true, stream: true, supportFetchAPI: true, standard: true,
+    secure: true } }
+])
+//App ready
 app.whenReady().then(() => {
   ipcMain.on("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId, subscription) => { await getEligibleRolesAsync(event ,clientId, tenantId, subscription);})     
   ipcMain.on("activateRoles", async (event : IpcMainInvokeEvent , roles : PIMRoles[]) => { await activateRolesAsync(event ,roles);})     
@@ -379,8 +373,28 @@ app.whenReady().then(() => {
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();      
-    }
+    }  
   });
+  console.log("\nCreating le protocol");
+  protocol.handle("http", (req) => {
+    console.log("\ninside protocol handler\n");
+    if(!app.isPackaged)
+    {              
+      return net.fetch(req, {bypassCustomProtocolHandlers : true}); ;
+    }
+    else{    
+    var urlString  = req.url.slice(8).split("/");
+    var urlOutput = url.format({
+      pathname: path.join(__dirname, "index.html"),  //Load home page from localhost or dist
+      protocol: "file:",
+      hash: urlString[1],
+      slashes: true,
+    });
+    console.log("\nURL output :" + urlOutput);
+    return net.fetch(urlOutput, {bypassCustomProtocolHandlers : true});
+  }
+  });
+  console.log('\nis protocol handled:' + protocol.isProtocolHandled('http'));
 });
 
 //App closed

@@ -4,25 +4,7 @@ import { apiResponse, PIMRoles } from '../interface';
 
 function Table()
 {    
-    const initialGraphApiData : PIMRoles[] = [
-        {
-          roleDefinition : 
-          {
-            id : 'PlaceHolder 1',
-            displayName : 'Admin Role',            
-          },
-          checked : true,
-          principalId : "Placeholder 1"
-        },
-        {
-          roleDefinition : 
-          {
-            id : 'PlaceHolder 2',
-            displayName : 'Contibutor Role'
-          },
-          checked : false,
-          principalId : "Placeholder 2"
-        }
+    const initialGraphApiData : PIMRoles[] = [            
     ];
     let [graphApiData, updateGraphApiData] = useState(initialGraphApiData); 
     var [apiResponse, updateApiResponse] = useState("Hello");

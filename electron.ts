@@ -393,8 +393,7 @@ app.whenReady().then(() => {
     console.log("\nURL output :" + urlOutput);
     return net.fetch(urlOutput, {bypassCustomProtocolHandlers : true});
   }
-  });
-  console.log('\nis protocol handled:' + protocol.isProtocolHandled('http'));
+  });  
 });
 
 //App closed

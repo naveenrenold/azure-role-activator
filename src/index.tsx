@@ -31,12 +31,3 @@ const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(routing);
 
-// const root = ReactDOM.createRoot(
-//   document.getElementById('root') as HTMLElement
-// );
-// routing.render(
-//   <React.StrictMode>
-//     <Router/>
-//   </React.StrictMode>
-// );
-

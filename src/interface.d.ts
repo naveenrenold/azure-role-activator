@@ -45,3 +45,10 @@ export interface requestSchedule{
     isSuccess : boolean;
     pimRoles : PIMRoles[];
    }
+
+   export interface cacheObject{
+    clientId : string,
+    tenantId : string,
+    subscripton: string,
+    checkedRoleIds : string[]
+   }

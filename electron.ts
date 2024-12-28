@@ -26,10 +26,13 @@ const pkceCodes = {
 }
 let graphAccessToken = '';
 let armAccessToken = '';
+let totalProgress = 0;
+let progressUnit = 0;
 
 ////Main event
 async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : string, tenantId : string, subscription? : string ) : Promise<void>
-  {    
+  {
+    try{    
     //create objects    
     const MSAL_CONFIG : Configuration = {
       auth: {
@@ -48,6 +51,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
       account : authResponse.account as AccountInfo,
       scopes : graphScopes
    };
+    win.setProgressBar(0.33);
     const graphTokenResponse = await pca.acquireTokenSilent(silentflowRequest);
     graphAccessToken = graphTokenResponse.accessToken;
     console.log("\nSilentFlow token:\n " + graphTokenResponse.accessToken)
@@ -64,6 +68,7 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
       console.log(response.pimRoles);
       pimRoles = pimRoles.concat(response.pimRoles);
     }
+    win.setProgressBar(0.67);
     //ARM api call
     if(subscription != null)
     {
@@ -74,8 +79,15 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
         console.log(response.pimRoles);
         pimRoles = pimRoles.concat(response.pimRoles);
       }
-    }              
-    win.webContents.send('getPimRoles', pimRoles);       
+    }
+    win.setProgressBar(1)              
+    setTimeout(() => {win.setProgressBar(-1)}, 1000);
+    win.webContents.send('getPimRoles', pimRoles);
+  }
+  catch(ex)
+  {
+    win.setProgressBar(-1);
+  }       
   };
 
   async function getArmRoles(subscription : string) : Promise<apiResponse>
@@ -140,7 +152,13 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
   }
 
   async function activateRolesAsync(event : IpcMainInvokeEvent, roles : PIMRoles[]) : Promise<void>
-  {        
+  { 
+    try
+    { 
+      progressUnit = 1 / roles.length;
+      totalProgress = 0;
+      win.setProgressBar(totalProgress);
+      console.log('\nProgress is :' + totalProgress);
     var response :apiResponse = {        
       isSuccess : true,
       pimRoles : []
@@ -182,8 +200,15 @@ async function getEligibleRolesAsync(event : IpcMainInvokeEvent, clientId : stri
         pimRoles : response.pimRoles.concat(graphresponse.pimRoles)
       }
     }
-    console.log('Sending to table: ' + response.isSuccess + response.pimRoles.length)
+    console.log('Sending to table: ' + response.isSuccess + response.pimRoles.length)    
+    win.setProgressBar(1)
+    setTimeout(() => {win.setProgressBar(-1)}, 1000);
     win.webContents.send('getPIMActivationResponse', response);
+  }
+  catch(ex)
+  {
+    win.setProgressBar(-1);
+  }
   }
   
 async function activateGraphRoles(roles : PIMRoles[]) : Promise<apiResponse>
@@ -194,6 +219,9 @@ async function activateGraphRoles(roles : PIMRoles[]) : Promise<apiResponse>
   }    
   for(let i = 0 ;i < roles.length; i++)
     {
+      totalProgress = totalProgress + progressUnit;  
+      console.log('\nProgress is :' + totalProgress);    
+      win.setProgressBar(totalProgress);
       var request :unifiedRoleAssignmentScheduleRequest = {
         action : "selfActivate",
         principalId : roles[i].principalId,
@@ -238,7 +266,10 @@ async function activateArmRoles(roles : PIMRoles[]) : Promise<apiResponse>
     pimRoles : []
   }    
   for(let i = 0 ;i < roles.length; i++)
-    {      
+    {
+      totalProgress = totalProgress + progressUnit; 
+      console.log('\nProgress is :' + totalProgress);     
+      win.setProgressBar(totalProgress);      
     var request = { 
         properties: { 
         principalId : roles[i].principalId, 
@@ -283,6 +314,7 @@ const createWindow = async() => {
   win = new BrowserWindow({
    width: 800,
    height: 600,
+   icon : './public/ara.png',
    webPreferences: {
      webSecurity: true,
      preload: path.join(__dirname, 'preload.js')  

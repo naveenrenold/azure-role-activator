@@ -19,7 +19,8 @@
       "target": "dmg"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon" : "build/ara.png"
     },
     "linux": {
       "target": "deb"
@@ -37,7 +38,8 @@
     "react-run": "yarn run dev  --prefix ..\\react-ui",
     "electron:package:mac": "yarn run build && electron-builder -m",
     "electron:package:win": "yarn run build && electron-builder -w",    
-    "electron:package:linux": "yarn run build && electron-builder -l"   
+    "electron:package:linux": "yarn run build && electron-builder -l",
+    "package": "electron-builder -w"
   },
   "repository": {
     "type": "git",

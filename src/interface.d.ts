@@ -3,6 +3,8 @@ export interface IElectronAPI{
     getPIMRoles : (callback : any) => any
     activateRoles : (roles : PIMRoles[]) => boolean
     getPIMActivationResponse : (callback : any) => any
+    readCache : () => responseObject<cacheObject>,
+    writeCache : (cache : cacheObject) => boolean
 }
 
 declare global{
@@ -46,9 +48,14 @@ export interface requestSchedule{
     pimRoles : PIMRoles[];
    }
 
-   export interface cacheObject{
-    clientId : string,
-    tenantId : string,
-    subscripton: string,
-    checkedRoleIds : string[]
+   export interface cacheObject extends responseObject{
+    clientId : string = "",
+    tenantId : string = "",
+    subscription: string = "",
+    checkedRoleIds? : string[]
+   }
+
+   export interface responseObject<T>{
+    isSuccess : boolean = false,
+    value? : T
    }

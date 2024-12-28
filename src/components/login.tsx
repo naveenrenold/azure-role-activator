@@ -1,16 +1,32 @@
 import {useState} from 'react';
 import '../App.css';
+import { cacheObject } from '../interface';
 
-function Login() {
+function Login() {  
+  // const scheme : cacheObject = {
+  //   clientId : "",
+  //   tenantId : "",
+  //   subscripton : ""
+  // };
+  let cache : cacheObject;
+  cache = window.electronAPI.readCache().value as cacheObject;
+  console.log('\nCache in renderer');
+  console.log(cache);
+
   //Constants
-  const defaultClientIdText = '68f0ecbf-8e17-4ae2-a92a-275a7f02ea33';
-  const defaultTenantIdText = '24d2489e-7bb3-4339-94a2-207bb2a75abc';
-  const defaultSubscription = 'dd249ddc-44d0-41a8-b0b3-925deb35f39f';
-  
+  // const defaultClientIdText = '68f0ecbf-8e17-4ae2-a92a-275a7f02ea33';
+  // const defaultTenantIdText = '24d2489e-7bb3-4339-94a2-207bb2a75abc';
+  // const defaultSubscription = 'dd249ddc-44d0-41a8-b0b3-925deb35f39f';
+
+  const defaultClientIdText = cache?.clientId ?? "";
+  const defaultTenantIdText = cache?.tenantId ?? "";
+  const defaultSubscription = cache?.subscription ?? "";
+
   //State defining
   const [clientIdText, setClientIdText] = useState(defaultClientIdText)
   const [tenantIdText, setTenantIdText] = useState(defaultTenantIdText)
   const [subscription, setSubscription] = useState(defaultSubscription)
+  const [rememberMeCheckBox, setRememberMeCheckBox] = useState(false);
   // function handleClientIdChange(textInput:string)
   // {
   //   setClientIdText(textInput ?? '');
@@ -55,16 +71,28 @@ function Login() {
       </div>      
       </div>      
         <div className ='flexbox-row-center'>
-      <button className='flexbutton' type='submit' onClick= {async e =>  { await window.electronAPI.getEligibleRoles(clientIdText, tenantIdText, subscription); }}>Get roles</button>              
+      <button className='flexbutton' type='submit' onClick= {async e =>  {await writeCache(); await window.electronAPI.getEligibleRoles(clientIdText, tenantIdText, subscription); }}>Get roles</button>              
       </div>
       <div className ='flexbox-row-center'>
       <label>
-        <input type="checkbox" name='remember checkbox' defaultChecked = {false}  title='remember checkbox' placeholder='Remember client and tenant id'/>
+        <input type="checkbox" name='remember checkbox' checked={rememberMeCheckBox} onChange={ e => {setRememberMeCheckBox(!rememberMeCheckBox)}}  title='remember checkbox'/>
         Remember client and tenant id
         </label>
       </div>
     </div>
   );
+  async function writeCache()
+  {
+    if(rememberMeCheckBox)
+    {
+      let cache : cacheObject = {
+        clientId : clientIdText,
+        tenantId : tenantIdText,
+        subscription : subscription
+      }
+      await window.electronAPI.writeCache(cache);
+    }
+  }
 }
 
 export default Login;

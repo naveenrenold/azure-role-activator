@@ -10,8 +10,9 @@ import {
 } from "@azure/msal-node";
 //import { AuthProvider, AuthProviderCallback, Client } from "@microsoft/microsoft-graph-client";
 import axios from "axios";
-import { apiResponse, PIMRoles, scheduleInfo} from './src/interface';
+import { apiResponse, cacheObject, PIMRoles, responseObject, scheduleInfo} from './src/interface';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
 ////Constants declare
 var win : BrowserWindow;
@@ -327,7 +328,7 @@ const createWindow = async() => {
        protocol: "file:",
        slashes: true,
      })
-   : "http://localhost:3000");     
+   : "http://localhost:3000");        
 };
 
 async function listenForAuthCodeAsync(window:BrowserWindow, navigateUrl:string) : Promise<string | null> {
@@ -378,6 +379,38 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
  return authResponse;
 }
 
+async function readCache() : Promise<responseObject<cacheObject>>{
+    const userDataPath = app.getPath('userData');
+    try{
+      const data  = fs.readFileSync(userDataPath + '/cache.json', {encoding : 'utf-8', flag : 'a+'});
+      console.log("\nRead File Success!");
+      console.log(data);
+      return {
+        isSuccess : true,
+        value : JSON.parse(data) as cacheObject
+      }      
+    }
+    catch(error : any)
+    {
+      console.log("\nRead File Error!");
+      return{
+        isSuccess : false
+      }                  
+    }    
+}
+async function writeCache(cache : cacheObject) : Promise<boolean>{
+    const userDataPath = app.getPath('userData');
+    try{
+      fs.writeFileSync(userDataPath + '/cache.json', JSON.stringify(cache) , {encoding :'utf-8', flag : 'w'});
+      console.log("\nWrite File Success!" + userDataPath+'/cache.json');
+      return true;
+    }
+    catch(error : any)
+    {
+      console.log("\nWrite File Error!" + userDataPath+'/cache.json');
+      return false;            
+    }
+}
 
 
 // async function getGraphClient(accessToken : string)
@@ -401,7 +434,9 @@ protocol.registerSchemesAsPrivileged([
 app.whenReady().then(() => {
   ipcMain.on("getEligibleRoles", async (event : IpcMainInvokeEvent , clientId, tenantId, subscription) => { await getEligibleRolesAsync(event ,clientId, tenantId, subscription);})     
   ipcMain.on("activateRoles", async (event : IpcMainInvokeEvent , roles : PIMRoles[]) => { await activateRolesAsync(event ,roles);})     
-   createWindow();  
+  ipcMain.handle("readCache", (event : IpcMainInvokeEvent) => readCache())
+  ipcMain.handle("writeCache", (event : IpcMainInvokeEvent, cache :cacheObject) => writeCache(cache))
+  createWindow();  
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();      

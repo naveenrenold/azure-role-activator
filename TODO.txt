@@ -184,3 +184,14 @@ Tasks to do:
 1. Check duplicates in get api 
 2. Enable loading
 3. Cache 
+------------------------
+
+loading enabled for get
+Need to enable for activat i think or already done
+
+I have decided today it will be finished Caching
+No more no Caching
+Then if you have time see if you can activate microsoft azure roles - not possible :(
+
+    might have to use electron to get cache data and pass to renderer
+    

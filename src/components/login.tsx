@@ -3,12 +3,7 @@ import '../App.css';
 import { cacheObject } from '../interface';
 
 function Login() {  
-  // const scheme : cacheObject = {
-  //   clientId : "",
-  //   tenantId : "",
-  //   subscripton : ""
-  // };          
-
+       
   //Constants
   // const defaultClientIdText = '68f0ecbf-8e17-4ae2-a92a-275a7f02ea33';
   // const defaultTenantIdText = '24d2489e-7bb3-4339-94a2-207bb2a75abc';

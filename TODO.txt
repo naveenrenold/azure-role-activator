@@ -195,3 +195,97 @@ Then if you have time see if you can activate microsoft azure roles - not possib
 
     might have to use electron to get cache data and pass to renderer
     
+
+----------------
+1. Finish Caching
+2. Msal login figure out
+3. Proper loading
+4. Check for duplicates
+
+
+[
+[1]   {
+[1]     id: '41a0b857-2319-425f-a6e1-69972f9ea6f3',
+[1]     principalId: '48ff067f-72e7-4d2d-a205-bf50923d1fcd',
+[1]     roleDefinitionId: '62e90394-69f5-4237-9190-012177145e10',
+[1]     directoryScopeId: '/',
+[1]     appScopeId: null,
+[1]     createdUsing: '41a0b857-2319-425f-a6e1-69972f9ea6f3',
+[1]     createdDateTime: '2024-09-08T15:32:16.303Z',
+[1]     modifiedDateTime: '0001-01-01T08:00:00Z',
+[1]     status: 'Provisioned',
+[1]     memberType: 'Direct',
+[1]     scheduleInfo: {
+[1]       startDateTime: '2024-09-08T15:32:16.303Z',
+[1]       recurrence: null,
+[1]       expiration: [Object]
+[1]     },
+[1]     roleDefinition: {
+[1]       id: '62e90394-69f5-4237-9190-012177145e10',
+[1]       description: '',
+[1]       displayName: 'Global Administrator',
+[1]       isBuiltIn: true,
+[1]       isEnabled: true,
+[1]       templateId: '62e90394-69f5-4237-9190-012177145e10',
+[1]       version: null,
+[1]       resourceScopes: [],
+[1]       rolePermissions: []
+[1]     }
+[1]   },
+[1]   {
+[1]     id: '28c66b02-2820-4854-9343-b302b03f0b90',
+[1]     principalId: '48ff067f-72e7-4d2d-a205-bf50923d1fcd',
+[1]     roleDefinitionId: 'cf1c38e5-3621-4004-a7cb-879624dced7c',
+[1]     directoryScopeId: '/',
+[1]     appScopeId: null,
+[1]     createdUsing: '28c66b02-2820-4854-9343-b302b03f0b90',
+[1]     createdDateTime: '2024-09-09T14:25:55.277Z',
+[1]     modifiedDateTime: '0001-01-01T08:00:00Z',
+[1]     status: 'Provisioned',
+[1]     memberType: 'Direct',
+[1]     scheduleInfo: {
+[1]       startDateTime: '2024-09-09T14:25:55.277Z',
+[1]       recurrence: null,
+[1]       expiration: [Object]
+[1]     },
+[1]     roleDefinition: {
+[1]       id: 'cf1c38e5-3621-4004-a7cb-879624dced7c',
+[1]       description: '',
+[1]       displayName: 'Application Developer',
+[1]       isBuiltIn: true,
+[1]       isEnabled: true,
+[1]       templateId: 'cf1c38e5-3621-4004-a7cb-879624dced7c',
+[1]       version: null,
+[1]       resourceScopes: [],
+[1]       rolePermissions: []
+[1]     }
+[1]   },
+[1]   {
+[1]     id: '2ad1d71a-3f5b-4bb9-8bfa-cb34091aa9aa',
+[1]     principalId: '4e98736c-8fa1-447b-9110-a1bc930db1d8',
+[1]     roleDefinitionId: '62e90394-69f5-4237-9190-012177145e10',
+[1]     directoryScopeId: '/',
+[1]     appScopeId: null,
+[1]     createdUsing: '2ad1d71a-3f5b-4bb9-8bfa-cb34091aa9aa',
+[1]     createdDateTime: '2024-11-11T07:32:37.117Z',
+[1]     modifiedDateTime: '0001-01-01T08:00:00Z',
+[1]     status: 'Provisioned',
+[1]     memberType: 'Direct',
+[1]     scheduleInfo: {
+[1]       startDateTime: '2024-11-11T07:32:37.117Z',
+[1]       recurrence: null,
+[1]       expiration: [Object]
+[1]     },
+[1]     roleDefinition: {
+[1]       id: '62e90394-69f5-4237-9190-012177145e10',
+[1]       description: '',
+[1]       displayName: 'Global Administrator',
+[1]       isBuiltIn: true,
+[1]       isEnabled: true,
+[1]       templateId: '62e90394-69f5-4237-9190-012177145e10',
+[1]       version: null,
+[1]       resourceScopes: [],
+[1]       rolePermissions: []
+[1]     }
+[1]   }
+[1] ]

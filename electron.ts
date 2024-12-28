@@ -384,7 +384,7 @@ async function readCache() : Promise<responseObject<cacheObject>>{
     try{
       const data  = fs.readFileSync(userDataPath + '/cache.json', {encoding : 'utf-8', flag : 'a+'});
       console.log("\nRead File Success!");
-      console.log(data);
+      console.log(JSON.parse(data) as cacheObject);
       return {
         isSuccess : true,
         value : JSON.parse(data) as cacheObject

@@ -3,8 +3,8 @@ export interface IElectronAPI{
     getPIMRoles : (callback : any) => any
     activateRoles : (roles : PIMRoles[]) => boolean
     getPIMActivationResponse : (callback : any) => any
-    readCache : () => responseObject<cacheObject>,
-    writeCache : (cache : cacheObject) => boolean
+    async readCache : () => Promise<responseObject<cacheObject>>,
+    async writeCache : (cache : cacheObject) => Promise<boolean>
 }
 
 declare global{

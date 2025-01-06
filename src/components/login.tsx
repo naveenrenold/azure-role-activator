@@ -52,7 +52,7 @@ function Login() {
         <div className = 'flexitem-margins-text'>
       <label>Enter your app/clientId* :
       <div className = 'flexitem-margins-textbox'>
-        <input className='textbox' type='text' value={clientIdText} title='clientId' id='clientId' onChange={e => handleTextChange(e.target.value, setClientIdText)} placeholder='Enter you clientId' defaultValue = {""}></input>            
+        <input className='textbox' type='text' value={clientIdText} title='clientId' id='clientId' onChange={e => handleTextChange(e.target.value, setClientIdText)} placeholder='Enter your clientId' defaultValue = {""}></input>            
       </div>
       </label>
       </div>      
@@ -61,7 +61,7 @@ function Login() {
         <div className = 'flexitem-margins-text'>
       <label>Enter your tenantId* :
       <div className = 'flexitem-margins-textbox'>
-        <input className='textbox' type='text' title='tenantId' value={tenantIdText} id='tenantId' onChange={ e => handleTextChange(e.target.value, setTenantIdText)} placeholder='Enter you tenantId' defaultValue = {""}></input>
+        <input className='textbox' type='text' title='tenantId' value={tenantIdText} id='tenantId' onChange={ e => handleTextChange(e.target.value, setTenantIdText)} placeholder='Enter your tenantId' defaultValue = {""}></input>
       </div>
       </label>
       </div>      
@@ -70,7 +70,7 @@ function Login() {
         <div className = 'flexitem-margins-text'>
       <label>Enter your subscription :
       <div className = 'flexitem-margins-textbox'>
-        <input className='textbox' type='text' title='subscription' value={subscription} id='subscription' onChange={ e => handleTextChange(e.target.value, setSubscription)} placeholder='Enter you tenantId' defaultValue = {""}></input>
+        <input className='textbox' type='text' title='subscription' value={subscription} id='subscription' onChange={ e => handleTextChange(e.target.value, setSubscription)} placeholder='Enter your subcription ' defaultValue = {""}></input>
       </div>
       </label>
       </div>      
@@ -81,7 +81,7 @@ function Login() {
       <div className ='flexbox-row-center'>
       <label>
         <input type="checkbox" name='remember checkbox' checked={rememberMeCheckBox} onChange={ e => {setRememberMeCheckBox(!rememberMeCheckBox)}}  title='remember checkbox'/>
-        Remember client and tenant id
+        Remember details
         </label>
       </div>
     </div>

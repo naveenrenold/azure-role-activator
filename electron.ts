@@ -382,7 +382,7 @@ async function getTokenInteractive(scopes : string[], pca : PublicClientApplicat
 async function readCache() : Promise<responseObject<cacheObject>>{
     const userDataPath = app.getPath('userData');
     try{
-      const data  = fs.readFileSync(userDataPath + '/cache.json', {encoding : 'utf-8', flag : 'a+'});
+      const data  = fs.readFileSync(userDataPath + '/cache.json', {encoding : 'utf-8', flag : 'r'});
       console.log("\nRead File Success!");
       console.log(JSON.parse(data) as cacheObject);
       return {
@@ -407,7 +407,8 @@ async function writeCache(cache : cacheObject) : Promise<boolean>{
     }
     catch(error : any)
     {
-      console.log("\nWrite File Error!" + userDataPath+'/cache.json');
+      console.log("\nWrite File Error!" + userDataPath+'/cache.json\n');
+      console.log(error)
       return false;            
     }
 }

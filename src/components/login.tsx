@@ -82,8 +82,8 @@ function Login() {
       <label>
         <input type="checkbox" name='remember checkbox' checked={rememberMeCheckBox} onChange={ e => {setRememberMeCheckBox(!rememberMeCheckBox)}}  title='remember checkbox'/>
         Remember details
-        </label>
-      </div>
+        </label>        
+      </div>      
     </div>
   );
   async function writeCache()

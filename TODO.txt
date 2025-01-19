@@ -197,10 +197,10 @@ Then if you have time see if you can activate microsoft azure roles - not possib
     
 
 ----------------
-1. Finish Caching
-2. Msal login figure out
-3. Proper loading
-4. Check for duplicates
+1. Finish Caching -- 
+2. Msal login figure out --
+3. Proper loading -- 
+4. Check for duplicates --
 
 
 [
@@ -289,3 +289,8 @@ Then if you have time see if you can activate microsoft azure roles - not possib
 [1]     }
 [1]   }
 [1] ]
+
+1. Finish Caching -- 
+2. Msal login figure out --
+3. Proper loading -- Need to disable some buttons or blur screen
+4. Check for duplicates --

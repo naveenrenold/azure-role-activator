@@ -66,3 +66,8 @@ color:yellow
     font-family: 'Times New Roman';
     text-shadow: 2px 2px 1px red;
 }
+progress{
+    width: 80%;
+    align-items: center;
+    accent-color: yellow;        
+}
